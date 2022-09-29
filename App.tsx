@@ -1,37 +1,15 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
-import { Text, View } from "react-native";
-import { useWallet } from "./src/hooks/useWallet";
+import React from "react";
+import { Safe } from "./src/componet/shared/safe";
+import { Asset } from "./src/componet/Assets/Asset";
+import { Assets } from "./src/componet/Assets";
+import { SpacialRequest } from "./src/componet/Assets/specialRequest";
+import { CreateAccount } from "./src/screens/createAccount";
+import { PyaonRequest } from "./src/screens/succesfull";
 
 export default function App() {
-	const {
-		seedPhrase,
-		evmWallets,
-		solanaWallets,
-		generateEvmWallet,
-		generateSeedPhrase,
-		generateSolanaWallet,
-	} = useWallet();
-
-	useEffect(() => {
-		if (seedPhrase) generateEvmWallet();
-		if (seedPhrase) generateSolanaWallet();
-	}, [seedPhrase]);
-
-	useEffect(() => {
-		console.log(evmWallets);
-	}, [evmWallets]);
-
-	useEffect(() => console.log(solanaWallets), [solanaWallets]);
-
-	useEffect(() => {
-		generateSeedPhrase();
-	}, []);
-
-	return (
-		<View className="flex-1 items-center justify-center">
-			<Text>Open up App.js to start working on your app!</Text>
-			<StatusBar style="auto" />
-		</View>
-	);
+  return (
+    <>
+      <PyaonRequest />
+    </>
+  );
 }
