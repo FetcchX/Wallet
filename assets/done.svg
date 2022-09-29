@@ -1,4 +1,12 @@
-<svg width="151" height="146" viewBox="0 0 151 146" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="151" height="146" rx="73" fill="#97DF71"/>
-<path d="M38 71.8652L63.5777 99L113 47" stroke="white" stroke-width="17.8043" stroke-linecap="round" stroke-linejoin="round"/>
+<svg width="198" height="200" viewBox="0 0 198 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="19" y="51" width="151" height="146" rx="73" fill="#97DF71"/>
+<path d="M57 122.865L82.5777 150L132 98" stroke="white" stroke-width="17.8043" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="40" cy="59.5" rx="3" ry="3.5" fill="#C05DFC"/>
+<circle cx="4.5" cy="66.5" r="4.5" fill="#FAC15E"/>
+<circle cx="17.5" cy="167.5" r="6.5" fill="#6FBF42"/>
+<circle cx="191" cy="138" r="7" fill="#72D5FA"/>
+<circle cx="160" cy="193" r="7" fill="#14A4BA"/>
+<circle cx="91" cy="7" r="7" fill="#F7C15F"/>
+<circle cx="178" cy="93" r="3" fill="#F7C15F"/>
+<path d="M145 54.4L148.808 54.829C155.087 55.5364 161.165 52.3529 164.158 46.7886L164.388 46.3613C165.639 44.0359 166.197 41.4006 165.996 38.7678V38.7678C165.458 31.7334 170.31 25.4252 177.247 24.1396L178 24" stroke="#FAC15E" stroke-width="5" stroke-linecap="round"/>
 </svg>

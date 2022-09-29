@@ -7,6 +7,7 @@ export const Assets = () => {
     <>
       <View
         style={{
+          width: "100%",
           marginVertical: SIZES.extralarge,
         }}
       >

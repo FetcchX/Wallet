@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export const PyaonRequest = () => {
+export const PyaonRequest = ({ navigation }: any) => {
   return (
     <View style={style.container}>
       <View style={style.top}>
@@ -135,6 +135,9 @@ export const PyaonRequest = () => {
             <Ionicons name="md-arrow-down" size={24} />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("success");
+            }}
             style={{ ...style.button, padding: 16, marginTop: 20 }}
           >
             <Text

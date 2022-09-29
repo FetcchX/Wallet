@@ -1,6 +1,9 @@
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { COLORS, textStyles, btn, SIZES } from "../styles/styles";
-export const Request = () => {
+interface Props {
+  navigation: any;
+}
+export const Request = ({ navigation }: Props) => {
   return (
     <>
       <View style={style.requestcontainer}>
@@ -15,6 +18,9 @@ export const Request = () => {
           }}
         >
           <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("payOnRequest");
+            }}
             style={{
               ...btn.pay,
             }}

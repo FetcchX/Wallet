@@ -1,6 +1,11 @@
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { COLORS, textStyles, btn, SIZES } from "../../styles/styles";
-export const SpacialRequest = () => {
+
+interface Props {
+  navigation: any;
+}
+
+export const SpacialRequest = ({ navigation }: Props) => {
   return (
     <>
       <View style={style.requestcontainer}>
@@ -15,6 +20,9 @@ export const SpacialRequest = () => {
           }}
         >
           <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("payOnRequest");
+            }}
             style={{
               ...btn.pay,
               justifyContent: "center",
@@ -28,6 +36,9 @@ export const SpacialRequest = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("requests");
+            }}
             style={{
               borderColor: COLORS.secondary,
               borderWidth: 1,

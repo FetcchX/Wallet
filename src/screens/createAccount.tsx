@@ -4,7 +4,7 @@ import { size } from "superstruct";
 import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export const CreateAccount = () => {
+export const CreateAccount = ({ navigation }: any) => {
   return (
     <View style={style.container}>
       <View
@@ -88,7 +88,12 @@ export const CreateAccount = () => {
           </TouchableOpacity>
         </View>
         <View>
-          <TouchableOpacity style={style.next}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("home");
+            }}
+            style={style.next}
+          >
             <Text
               style={{
                 fontSize: SIZES.extralarge,
