@@ -3,8 +3,28 @@ import { Text, TextInput, View } from "react-native";
 import { size } from "superstruct";
 import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useCallback, useMemo, useRef, useState } from "react";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 export const CreateAccount = ({ navigation }: any) => {
+  const [isShowing, setIsShowing] = useState(false);
+  const [num, setNum] = useState(-1);
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  const handleTokenOpenPress = () => {
+    if (!bottomSheetRef) return;
+
+    (bottomSheetRef as React.MutableRefObject<BottomSheet>).current.expand();
+  };
+
   return (
     <View style={style.container}>
       <View
@@ -76,7 +96,12 @@ export const CreateAccount = ({ navigation }: any) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={style.button}>
+          <TouchableOpacity
+            onPress={() => {
+              handleTokenOpenPress();
+            }}
+            style={style.button}
+          >
             <Text
               style={{
                 fontSize: SIZES.extralarge,
@@ -105,6 +130,15 @@ export const CreateAccount = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
       </View>
+      <BottomSheet
+        enablePanDownToClose={true}
+        ref={bottomSheetRef}
+        index={num}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <Text>Awesome 🎉</Text>
+      </BottomSheet>
     </View>
   );
 };

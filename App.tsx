@@ -11,23 +11,30 @@ import { Requests } from "./src/screens/requests";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Main } from "./src/screens/Home";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{ headerShown: false }}
-          initialRouteName={"createAccount"}
-        >
-          <Stack.Screen name="createAccount" component={CreateAccount} />
-          <Stack.Screen name="home" component={Main} />
-          <Stack.Screen name="requests" component={Requests} />
-          <Stack.Screen name="success" component={Succesfull} />
-          <Stack.Screen name="payOnRequest" component={PyaonRequest} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <GestureHandlerRootView
+        style={{
+          flex: 1,
+        }}
+      >
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false }}
+            initialRouteName={"createAccount"}
+          >
+            <Stack.Screen name="createAccount" component={CreateAccount} />
+            <Stack.Screen name="home" component={Main} />
+            <Stack.Screen name="requests" component={Requests} />
+            <Stack.Screen name="success" component={Succesfull} />
+            <Stack.Screen name="payOnRequest" component={PyaonRequest} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </GestureHandlerRootView>
     </>
   );
 }
