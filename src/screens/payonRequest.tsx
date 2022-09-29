@@ -1,8 +1,29 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useCallback, useMemo, useRef } from "react";
 
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 export const PyaonRequest = ({ navigation }: any) => {
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const AccSheetRef = useRef<BottomSheet>(null);
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  const handleAccountPress = () => {
+    if (!AccSheetRef) return;
+    (AccSheetRef as React.MutableRefObject<BottomSheet>).current.expand();
+  };
+  const handleTokenPress = () => {
+    if (!bottomSheetRef) return;
+    (bottomSheetRef as React.MutableRefObject<BottomSheet>).current.expand();
+  };
+
   return (
     <View style={style.container}>
       <View style={style.top}>
@@ -60,7 +81,12 @@ export const PyaonRequest = ({ navigation }: any) => {
           >
             choose Token
           </Text>
-          <TouchableOpacity style={style.button}>
+          <TouchableOpacity
+            onPress={() => {
+              handleTokenPress();
+            }}
+            style={style.button}
+          >
             <View
               style={{
                 flexDirection: "row",
@@ -104,7 +130,12 @@ export const PyaonRequest = ({ navigation }: any) => {
           >
             choose Account
           </Text>
-          <TouchableOpacity style={style.button}>
+          <TouchableOpacity
+            onPress={() => {
+              handleAccountPress();
+            }}
+            style={style.button}
+          >
             <View
               style={{
                 flexDirection: "row",
@@ -152,6 +183,24 @@ export const PyaonRequest = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
       </View>
+      <BottomSheet
+        enablePanDownToClose={true}
+        ref={AccSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <Text>Accounts 🎉</Text>
+      </BottomSheet>
+      <BottomSheet
+        enablePanDownToClose={true}
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <Text>Token Press 🎉</Text>
+      </BottomSheet>
     </View>
   );
 };

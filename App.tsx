@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Safe } from "./src/componet/shared/safe";
 import { Asset } from "./src/componet/Assets/Asset";
 import { Assets } from "./src/componet/Assets";
@@ -12,9 +12,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Main } from "./src/screens/Home";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useFonts } from "expo-font";
+import { ImageBackground } from "react-native";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [loaded] = useFonts({
+    k: require("./assets/k.ttf"),
+  });
+
+  if (!loaded) return null;
+
   return (
     <>
       <GestureHandlerRootView

@@ -1,5 +1,5 @@
 Arguments: 
-  /home/chan/.nvm/versions/node/v18.7.0/bin/node /home/chan/.nvm/versions/node/v18.7.0/bin/yarnpkg add @expo-google-fonts/krona_one
+  /home/chan/.nvm/versions/node/v18.7.0/bin/node /home/chan/.nvm/versions/node/v18.7.0/bin/yarn add expo-fonts
 
 PATH: 
   /home/chan/.nvm/versions/node/v18.7.0/bin:/home/chan/.cargo/bin:/home/chan/.local/bin:/home/chan/.local/bin:/home/chan/.local/bin:/home/chan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/chan/Android/Sdk/emulator:/home/chan/Android/Sdk/platform-tools
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@expo-google-fonts%2fkrona_one: Not found
+  Error: https://registry.yarnpkg.com/expo-fonts: Not found
       at params.callback [as _callback] (/home/chan/.nvm/versions/node/v18.7.0/lib/node_modules/yarn/lib/cli.js:66145:18)
       at self.callback (/home/chan/.nvm/versions/node/v18.7.0/lib/node_modules/yarn/lib/cli.js:140890:22)
       at Request.emit (node:events:513:28)

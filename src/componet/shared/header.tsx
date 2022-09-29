@@ -1,6 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import { SIZES } from "../../styles/styles";
 import DOne from "../../../assets/logo.svg";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import { any } from "superstruct";
+
 export const Header = () => {
   return (
     <View
@@ -9,23 +16,25 @@ export const Header = () => {
       }}
     >
       <DOne />
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <Text
+      <TouchableOpacity>
+        <View
           style={{
-            fontSize: SIZES.extralarge,
-            marginRight: 12,
-            fontWeight: "bold",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
-          vikash
-        </Text>
-        <View style={headerstyles.circle}></View>
-      </View>
+          <Text
+            style={{
+              fontSize: SIZES.extralarge,
+              marginRight: 12,
+              fontWeight: "bold",
+            }}
+          >
+            vikash
+          </Text>
+          <View style={headerstyles.circle}></View>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

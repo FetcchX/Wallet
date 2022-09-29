@@ -1,4 +1,10 @@
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+} from "react-native";
 import { Safe } from "../componet/shared/safe";
 import Done from "../../assets/done.svg";
 import { COLORS, SIZES } from "../styles/styles";
@@ -7,61 +13,64 @@ import { Header } from "../componet/shared/header";
 export const Succesfull = ({ navigation }: any) => {
   return (
     <>
-      <Safe>
-        <View style={style.container}>
-          <Header />
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Done />
-            <Text
+      <ImageBackground source={require("../../assets/v.png")}>
+        {" "}
+        <Safe>
+          <View style={style.container}>
+            <Header />
+            <View
               style={{
-                textAlign: "center",
-                fontSize: SIZES.extralarge,
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
-              20 USDC has been successfully sent to amazon@fetcch
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity
-              style={{
-                ...style.button,
-                backgroundColor: "transparent",
-                borderWidth: 2,
-                borderColor: COLORS.secondary,
-              }}
-            >
+              <Done />
               <Text
                 style={{
-                  width: "100%",
                   textAlign: "center",
+                  fontSize: SIZES.extralarge,
                 }}
               >
-                View Transection
+                20 USDC has been successfully sent to amazon@fetcch
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("home");
-              }}
-              style={style.button}
-            >
-              <Text
+            </View>
+            <View>
+              <TouchableOpacity
                 style={{
-                  width: "100%",
-                  textAlign: "center",
+                  ...style.button,
+                  backgroundColor: "transparent",
+                  borderWidth: 2,
+                  borderColor: COLORS.secondary,
                 }}
               >
-                Return to Home
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  View Transection
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("home");
+                }}
+                style={style.button}
+              >
+                <Text
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  Return to Home
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Safe>
+        </Safe>
+      </ImageBackground>
     </>
   );
 };

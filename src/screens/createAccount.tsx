@@ -1,10 +1,12 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { ImageBackground, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import { size } from "superstruct";
 import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useCallback, useMemo, useRef, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { CustomSheet } from "../componet/customshee";
+import { handlonPress } from "../hooks/useBotomsheet";
 
 export const CreateAccount = ({ navigation }: any) => {
   const [isShowing, setIsShowing] = useState(false);
@@ -21,7 +23,6 @@ export const CreateAccount = ({ navigation }: any) => {
 
   const handleTokenOpenPress = () => {
     if (!bottomSheetRef) return;
-
     (bottomSheetRef as React.MutableRefObject<BottomSheet>).current.expand();
   };
 
@@ -29,105 +30,112 @@ export const CreateAccount = ({ navigation }: any) => {
     <View style={style.container}>
       <View
         style={{
-          paddingVertical: 20,
-          paddingHorizontal: SIZES.extralarge,
+          flex: 1,
+          height: "100$",
         }}
       >
-        <Text style={style.headerText}>Create Account</Text>
         <View
           style={{
             paddingVertical: 20,
+            paddingHorizontal: SIZES.extralarge,
           }}
         >
-          <Text
+          <Text style={style.headerText}>Create Account</Text>
+          <View
             style={{
-              fontSize: SIZES.large,
-              fontWeight: "bold",
-              marginBottom: SIZES.small,
+              paddingVertical: 20,
             }}
           >
-            username
-          </Text>
-          <TextInput
-            placeholder="kid@fetcch"
-            style={{
-              borderRadius: 14,
-              borderColor: "#000",
-              borderWidth: 1,
-              padding: 8,
-            }}
-          />
-          <Text
-            style={{
-              fontSize: SIZES.xsmall,
-            }}
-          >
-            *you cannot change your username later
-          </Text>
+            <Text
+              style={{
+                fontSize: SIZES.large,
+                fontWeight: "bold",
+                marginBottom: SIZES.small,
+              }}
+            >
+              username
+            </Text>
+            <TextInput
+              placeholder="kid@fetcch"
+              style={{
+                borderRadius: 14,
+                borderColor: "#000",
+                borderWidth: 1,
+                padding: 8,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: SIZES.xsmall,
+              }}
+            >
+              *you cannot change your username later
+            </Text>
+          </View>
         </View>
-      </View>
-      <View style={style.bottom}>
-        <View>
-          <Text
-            style={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: SIZES.extralarge,
-            }}
-          >
-            select chain (s)
-          </Text>
-          <Text
-            style={{
-              color: "white",
-              fontSize: SIZES.small,
-            }}
-          >
-            Select chains for whom you want to create
-          </Text>
+        <View style={style.bottom}>
           <View>
-            <TouchableOpacity style={style.circle}>
+            <Text
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontSize: SIZES.extralarge,
+              }}
+            >
+              select chain (s)
+            </Text>
+            <Text
+              style={{
+                color: "white",
+                fontSize: SIZES.small,
+              }}
+            >
+              Select chains for whom you want to create
+            </Text>
+            <View>
+              <TouchableOpacity style={style.circle}>
+                <Text
+                  style={{
+                    fontSize: SIZES.extralarge,
+                  }}
+                >
+                  S
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                handleTokenOpenPress();
+              }}
+              style={style.button}
+            >
               <Text
                 style={{
                   fontSize: SIZES.extralarge,
                 }}
               >
-                S
+                Select Chains
+              </Text>
+              <Ionicons name="md-arrow-forward-outline" size={24} />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("home");
+              }}
+              style={style.next}
+            >
+              <Text
+                style={{
+                  fontSize: SIZES.extralarge,
+                  textAlign: "center",
+                }}
+              >
+                Next
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              handleTokenOpenPress();
-            }}
-            style={style.button}
-          >
-            <Text
-              style={{
-                fontSize: SIZES.extralarge,
-              }}
-            >
-              Select Chains
-            </Text>
-            <Ionicons name="md-arrow-forward-outline" size={24} />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("home");
-            }}
-            style={style.next}
-          >
-            <Text
-              style={{
-                fontSize: SIZES.extralarge,
-                textAlign: "center",
-              }}
-            >
-              Next
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
       <BottomSheet
@@ -149,6 +157,7 @@ const style = StyleSheet.create({
     height: "100%",
   },
   headerText: {
+    fontFamily: "k",
     padding: SIZES.extralarge,
     fontSize: SIZES.extralarge,
     textAlign: "center",
