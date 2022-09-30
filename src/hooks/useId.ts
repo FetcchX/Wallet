@@ -1,4 +1,8 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
+import Constants from "expo-constants";
+import { AsyncStorage } from "react-native";
+const { manifest } = Constants;
 
 export interface GenerateMessageWalletId {
 	id: string;
@@ -39,7 +43,13 @@ export interface WalletId {
 	previousSignature: string;
 }
 
+const BASE_URL = `http://${manifest?.debuggerHost
+	?.split(":")
+	.shift()}:5000/graphql/`;
+
 export const useId = () => {
+	const [id, setId] = useState<WalletId>();
+
 	const getId = async ({
 		id,
 		signedMsg,
@@ -50,6 +60,7 @@ export const useId = () => {
 		try {
 			const res = await axios({
 				method: "POST",
+				url: BASE_URL,
 				data: {
 					query: `
 					query GetUserData($data: IdDataInput) {
@@ -103,6 +114,7 @@ export const useId = () => {
 		try {
 			const res = await axios({
 				method: "POST",
+				url: BASE_URL,
 				data: {
 					query: `
 					query GenerateMessage($id: WalletIdCreateInput!, $nonce: Int!) {
@@ -149,8 +161,11 @@ export const useId = () => {
 
 	const createId = async (id: GenerateMessageWalletId) => {
 		try {
+			console.log(id);
+
 			const res = await axios({
 				method: "POST",
+				url: BASE_URL,
 				data: {
 					query: `
 					mutation CreateWalletId($walletId: WalletIdCreateInput!) {
@@ -181,21 +196,37 @@ export const useId = () => {
 					}
 					`,
 					variables: {
-						id,
+						walletId: id,
 					},
 				},
 			});
 
 			const data = await res.data;
+			console.log(JSON.stringify(data.data.createWalletId), "Das");
+			AsyncStorage.setItem(
+				"walletid",
+				JSON.stringify(data.data.createWalletId)
+			);
+			setId(data.data.createWalletId);
 
 			return data.data.createWalletId;
 		} catch (e) {
-			console.log(e);
+			console.log(JSON.stringify(e));
 			throw e;
 		}
 	};
 
+	useEffect(() => {
+		(async () => {
+			console.log(await AsyncStorage.getAllKeys());
+			const a: any = AsyncStorage.getItem("walletid");
+			console.log(a, "Dsa");
+			// setId(JSON.parse(a));
+		})();
+	});
+
 	return {
+		id,
 		generateMessage,
 		createId,
 	};

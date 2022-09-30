@@ -7,8 +7,13 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { any } from "superstruct";
+import { useId } from "../../hooks/useId";
+import { useWallet } from "../../hooks";
 
 export const Header = () => {
+	const { id } = useId();
+	const { evmWallets } = useWallet();
+
 	return (
 		<View
 			style={{
@@ -31,7 +36,7 @@ export const Header = () => {
 							fontFamily: "KronaOne_400Regular",
 						}}
 					>
-						vikash@fetcch
+						{id?.id}
 					</Text>
 					<View style={headerstyles.circle}></View>
 				</View>

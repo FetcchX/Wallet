@@ -3,12 +3,21 @@ import { Text, TextInput, View } from "react-native";
 import { size } from "superstruct";
 import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { CustomSheet } from "../componet/customshee";
 import { handlonPress } from "../hooks/useBotomsheet";
+import { useWallet } from "../hooks";
+import { useId } from "../hooks/useId";
 
-const chains = [
+interface Chain {
+	logo: string;
+	name: string;
+	chainId: number;
+	internalId: number;
+}
+
+const chains: Chain[] = [
 	{
 		logo: "E",
 		name: "Ethereum Goerli",
@@ -24,10 +33,22 @@ const chains = [
 ];
 
 export const CreateAccount = ({ navigation }: any) => {
+	const {
+		evmWallets,
+		solanaWallets,
+		seedPhrase,
+		generateSeedPhrase,
+		generateEvmWallet,
+	} = useWallet();
+
+	const { id, createId } = useId();
+
 	const [isShowing, setIsShowing] = useState(false);
 	const [num, setNum] = useState(-1);
 
-	const [selectedChains, setSelectedChains] = useState<any>([]);
+	const [username, setUsername] = useState("");
+
+	const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
 
 	const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -43,6 +64,69 @@ export const CreateAccount = ({ navigation }: any) => {
 		(
 			bottomSheetRef as React.MutableRefObject<BottomSheet>
 		).current.expand();
+	};
+
+	useEffect(() => {
+		if (seedPhrase) {
+			generateEvmWallet();
+			// navigation.navigate("home");
+		}
+	}, [seedPhrase]);
+
+	useEffect(() => {
+		(async () => {
+			if (
+				evmWallets.length > 0 &&
+				selectedChains.length > 0 &&
+				username.length > 3
+			) {
+				if (
+					selectedChains.find((chain) =>
+						chain.name.includes("Solana")
+					)
+				) {
+				} else {
+					const defaultAddress = {
+						address: evmWallets[0].address,
+						chain: selectedChains[0].internalId,
+					};
+
+					const wallets = evmWallets.slice(1);
+
+					const otherAddresses = wallets.map((wallet) => {
+						return {
+							address: wallet.address,
+							chain: selectedChains.map((ch) => ch.internalId),
+						};
+					});
+
+					const id = await createId({
+						default: defaultAddress,
+						others: otherAddresses,
+						id: `${username}@fetcch.testnet`,
+						provider: "fetcch.testnet",
+						identifier: username,
+					});
+
+					console.log(id, "id2");
+
+					navigation.navigate("home");
+				}
+			}
+		})();
+	}, [evmWallets, solanaWallets]);
+
+	useEffect(() => {
+		console.log(id, "id");
+	}, [id]);
+
+	useEffect(
+		() => console.log(evmWallets, solanaWallets),
+		[evmWallets, solanaWallets]
+	);
+
+	const createWallet = () => {
+		generateSeedPhrase();
 	};
 
 	return (
@@ -75,7 +159,9 @@ export const CreateAccount = ({ navigation }: any) => {
 							Username
 						</Text>
 						<TextInput
+							value={username}
 							placeholder="kid@fetcch"
+							onChangeText={(text) => setUsername(text)}
 							style={{
 								borderRadius: 14,
 								borderColor: "#000",
@@ -164,7 +250,7 @@ export const CreateAccount = ({ navigation }: any) => {
 					<View>
 						<TouchableOpacity
 							onPress={() => {
-								navigation.navigate("home");
+								createWallet();
 							}}
 							style={style.next}
 						>

@@ -1,3 +1,7 @@
+import "react-native-get-random-values";
+import "react-native-url-polyfill/auto";
+import "@ethersproject/shims";
+
 import React, { useCallback } from "react";
 import { Safe } from "./src/componet/shared/safe";
 import { Asset } from "./src/componet/Assets/Asset";
@@ -15,7 +19,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ImageBackground } from "react-native";
 import AppLoading from "expo-app-loading";
 import { useFonts, KronaOne_400Regular } from "@expo-google-fonts/krona-one";
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {

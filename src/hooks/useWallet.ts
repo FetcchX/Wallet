@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
-import { Keypair } from "@solana/web3.js";
-import * as bip39 from "bip39";
-import { derivePath } from "ed25519-hd-key";
-import bs58 from "bs58";
+// import { Keypair } from "@solana/web3.js";
+// import * as bip39 from "bip39";
+// import { derivePath } from "ed25519-hd-key";
+// import bs58 from "bs58";
 
 import { useState } from "react";
 
@@ -40,29 +40,31 @@ export const useWallet = () => {
 
 			return shallowCopy;
 		});
+
+		console.log(wallet);
 	};
 
-	const generateSolanaWallet = () => {
-		if (!seedPhrase) throw "Seed phrase doesn't exist";
+	// const generateSolanaWallet = () => {
+	// 	if (!seedPhrase) throw "Seed phrase doesn't exist";
 
-		const seed = bip39.mnemonicToSeedSync(seedPhrase, "");
+	// 	const seed = bip39.mnemonicToSeedSync(seedPhrase, "");
 
-		const path = `m/44'/501'/${solanaWallets.length}'/0'`;
-		const wallet = Keypair.fromSeed(
-			derivePath(path, seed.toString("hex")).key
-		);
+	// 	const path = `m/44'/501'/${solanaWallets.length}'/0'`;
+	// 	const wallet = Keypair.fromSeed(
+	// 		derivePath(path, seed.toString("hex")).key
+	// 	);
 
-		setSolanaWallets((value) => {
-			let shallowCopy = [...value];
+	// 	setSolanaWallets((value) => {
+	// 		let shallowCopy = [...value];
 
-			shallowCopy.push({
-				address: wallet.publicKey.toString(),
-				privateKey: bs58.encode(wallet.secretKey),
-			});
+	// 		shallowCopy.push({
+	// 			address: wallet.publicKey.toString(),
+	// 			privateKey: bs58.encode(wallet.secretKey),
+	// 		});
 
-			return shallowCopy;
-		});
-	};
+	// 		return shallowCopy;
+	// 	});
+	// };
 
 	return {
 		evmWallets,
@@ -70,6 +72,6 @@ export const useWallet = () => {
 		seedPhrase,
 		generateEvmWallet,
 		generateSeedPhrase,
-		generateSolanaWallet,
+		// generateSolanaWallet,
 	};
 };
