@@ -9,6 +9,7 @@ import { CustomSheet } from "../componet/customshee";
 import { handlonPress } from "../hooks/useBotomsheet";
 import { useWallet } from "../hooks";
 import { useId } from "../hooks/useId";
+import { useAppContext } from "../context";
 
 interface Chain {
 	logo: string;
@@ -33,13 +34,9 @@ const chains: Chain[] = [
 ];
 
 export const CreateAccount = ({ navigation }: any) => {
-	const {
-		evmWallets,
-		solanaWallets,
-		seedPhrase,
-		generateSeedPhrase,
-		generateEvmWallet,
-	} = useWallet();
+	const { evmWallets } = useAppContext();
+
+	const { seedPhrase, generateSeedPhrase, generateEvmWallet } = useWallet();
 
 	const { id, createId } = useId();
 
@@ -114,16 +111,11 @@ export const CreateAccount = ({ navigation }: any) => {
 				}
 			}
 		})();
-	}, [evmWallets, solanaWallets]);
+	}, [evmWallets]);
 
 	useEffect(() => {
 		console.log(id, "id");
 	}, [id]);
-
-	useEffect(
-		() => console.log(evmWallets, solanaWallets),
-		[evmWallets, solanaWallets]
-	);
 
 	const createWallet = () => {
 		generateSeedPhrase();

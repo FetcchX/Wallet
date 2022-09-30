@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { SIZES } from "../../styles/styles";
 import Logo from "../../../assets/usdc.svg";
 
-export const Asset = () => {
+export const Asset = ({ name, balance }: { name: string; balance: number }) => {
 	return (
 		<View style={AssetStyle.container}>
 			<View style={AssetStyle.left}>
@@ -13,7 +13,7 @@ export const Asset = () => {
 					}}
 				/>
 				<View>
-					<Text style={AssetStyle.token}>USDC</Text>
+					<Text style={AssetStyle.token}>{name}</Text>
 					<Text
 						style={{
 							fontSize: 8,
@@ -25,7 +25,7 @@ export const Asset = () => {
 				</View>
 			</View>
 			<View>
-				<Text style={AssetStyle.price}>$20000</Text>
+				<Text style={AssetStyle.price}>${balance}</Text>
 			</View>
 		</View>
 	);

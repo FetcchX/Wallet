@@ -3,12 +3,34 @@ import { COLORS, SIZES } from "../styles/styles";
 import { Assets } from "./Assets";
 import { SpacialRequest } from "./Assets/specialRequest";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useBalance } from "../hooks/useBalance";
+import { useEffect, useId, useState } from "react";
+import { useAppContext } from "../context";
 
 interface Props {
 	navigation: any;
 }
 
 export const HomeTop = ({ navigation }: Props) => {
+	const { id } = useAppContext();
+	const { getNativeBalance, getERC20Balance } = useBalance();
+	const [balance, setBalance] = useState(0);
+	const [erc20, setERC20] = useState<any[]>([]);
+
+	useEffect(() => {
+		getNativeBalance(id?.default.chain.chainId as string).then(
+			(balance) => {
+				console.log(balance);
+				setBalance(balance);
+			}
+		);
+
+		getERC20Balance(
+			id?.default.address as string,
+			id?.default.chain.chainId as string
+		).then((balance) => setERC20(balance));
+	}, []);
+
 	return (
 		<View style={style.constainer}>
 			<View
@@ -55,7 +77,7 @@ export const HomeTop = ({ navigation }: Props) => {
 								fontFamily: "KronaOne_400Regular",
 							}}
 						>
-							$ 20,000
+							$ {balance}
 						</Text>
 
 						<View
@@ -112,7 +134,7 @@ export const HomeTop = ({ navigation }: Props) => {
 				</View>
 			</View>
 			<SpacialRequest navigation={navigation} />
-			<Assets />
+			<Assets assets={erc20} />
 		</View>
 	);
 };

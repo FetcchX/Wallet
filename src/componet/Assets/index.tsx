@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 import { SIZES } from "../../styles/styles";
 import { Asset } from "./Asset";
 
-export const Assets = () => {
+export const Assets = ({ assets }: { assets: any[] }) => {
 	return (
 		<>
 			<View
@@ -19,11 +19,9 @@ export const Assets = () => {
 				>
 					8 Assets
 				</Text>
-				<Asset />
-				<Asset />
-				<Asset />
-				<Asset />
-				<Asset />
+				{assets.map((asset) => (
+					<Asset name={asset.symbol} balance={asset.balance} />
+				))}
 			</View>
 		</>
 	);
