@@ -40,6 +40,65 @@ export interface WalletId {
 }
 
 export const useId = () => {
+	const getId = async ({
+		id,
+		signedMsg,
+	}: {
+		id?: string;
+		signedMsg?: string;
+	}) => {
+		try {
+			const res = await axios({
+				method: "POST",
+				data: {
+					query: `
+					query GetUserData($data: IdDataInput) {
+						walletId(data: $data) {
+							id
+							provider {
+								id
+							}
+							default {
+								address
+								chain {
+									id
+									name
+								  icon
+								  rpc
+								  type
+								  faucets
+								  nativeCurrency { name, symbol, decimals }
+								  shortName
+								  infoURL
+								  chainId
+								  explorers { name, url, standard }
+								}
+							}
+							others {
+								address
+								chain {
+									id
+								}
+							}
+							identifier
+						}
+					}
+					`,
+					variables: {
+						id,
+					},
+				},
+			});
+
+			const data = await res.data;
+
+			return data.data.generateMessage;
+		} catch (e) {
+			console.log(e);
+			throw e;
+		}
+	};
+
 	const generateMessage = async (id: GenerateMessageWalletId) => {
 		try {
 			const res = await axios({
