@@ -1,11 +1,37 @@
+import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { useId } from "../../hooks/useId";
 import { COLORS, textStyles, btn, SIZES } from "../../styles/styles";
+import { getToken } from "fetcch-chain-data";
+import { ethers } from "ethers";
 
 interface Props {
 	navigation: any;
 }
 
 export const SpacialRequest = ({ navigation }: Props) => {
+	const { getPaymentRequest } = useId();
+
+	const [request, setRequest] = useState<any>();
+
+	useEffect(() => {
+		getPaymentRequest().then((res) => {
+			if (res.length > 0) {
+				const token = getToken(res[0].token, res[0].chain.id);
+				setRequest({
+					...res[0],
+					token: token,
+				});
+			}
+		});
+	}, []);
+
+	useEffect(() => {
+		console.log(request, "requ");
+	}, [request]);
+
+	if (!request) return <></>;
+
 	return (
 		<>
 			<View style={style.requestcontainer}>
@@ -18,8 +44,13 @@ export const SpacialRequest = ({ navigation }: Props) => {
 						marginTop: SIZES.extralarge,
 					}}
 				>
-					Pay 20 USDC to satyam@fetcch for “Pokemon Card” at
-					amazon.com
+					Pay{" "}
+					{ethers.utils.formatUnits(
+						request.amount,
+						request.token.decimals
+					)}{" "}
+					{request.token.name} to {request.toId.id} for “
+					{request.label}” at {request.message}
 				</Text>
 				<View
 					style={{

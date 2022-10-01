@@ -46,7 +46,7 @@ export interface WalletId {
 
 const BASE_URL = `http://${manifest?.debuggerHost
 	?.split(":")
-	.shift()}:5000/graphql/`;
+	.shift()}:4000/graphql/`;
 
 export const useId = () => {
 	const { id, setId } = useAppContext();
@@ -213,9 +213,49 @@ export const useId = () => {
 		}
 	};
 
+	const getPaymentRequest = async () => {
+		try {
+			const res = await axios({
+				method: "POST",
+				url: BASE_URL,
+				data: {
+					query: `
+					query {
+						requests(where: { toId: { id: "satyam@fetcch.testnet" } }) {
+							id
+							toId {
+								id
+							}
+							chain {
+								id
+								chainId
+								name
+							}
+							token
+							amount
+							label
+							message
+						}
+					}
+					`,
+				},
+			});
+
+			const data = await res.data;
+
+			const result = data.data.requests;
+
+			return result;
+		} catch (e) {
+			console.log(JSON.stringify(e));
+			throw e;
+		}
+	};
+
 	return {
 		id,
 		generateMessage,
 		createId,
+		getPaymentRequest,
 	};
 };

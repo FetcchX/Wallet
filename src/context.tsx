@@ -98,6 +98,13 @@ export const AppContextProvider = ({ children }: Props) => {
 		AsyncStorage.setItem("walletid", JSON.stringify(id));
 	}, [id]);
 
+	useEffect(() => {
+		(async () => {
+			const a: any = await AsyncStorage.getItem("walletid");
+			setId(JSON.parse(a));
+		})();
+	}, []);
+
 	// useEffect(() => {
 	// 	if (id == null) return;
 	// 	AsyncStorage.setItem("walletid", JSON.stringify(id));

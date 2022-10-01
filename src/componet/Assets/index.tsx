@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { Text, View } from "react-native";
 import { SIZES } from "../../styles/styles";
 import { Asset } from "./Asset";
@@ -20,7 +21,13 @@ export const Assets = ({ assets }: { assets: any[] }) => {
 					8 Assets
 				</Text>
 				{assets.map((asset) => (
-					<Asset name={asset.symbol} balance={asset.balance} />
+					<Asset
+						name={asset.symbol}
+						balance={ethers.utils.formatUnits(
+							asset.balance,
+							asset.decimals
+						)}
+					/>
 				))}
 			</View>
 		</>

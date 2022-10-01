@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { SIZES } from "../../styles/styles";
 import Logo from "../../../assets/usdc.svg";
 
-export const Asset = ({ name, balance }: { name: string; balance: number }) => {
+export const Asset = ({ name, balance }: { name: string; balance: string }) => {
 	return (
 		<View style={AssetStyle.container}>
 			<View style={AssetStyle.left}>
