@@ -20,6 +20,7 @@ import { AsyncStorage, ImageBackground } from "react-native";
 import AppLoading from "expo-app-loading";
 import { useFonts, KronaOne_400Regular } from "@expo-google-fonts/krona-one";
 import { AppContextProvider } from "./src/context";
+import { Send } from "./src/screens/send";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -64,6 +65,7 @@ export default function App() {
 								name="payOnRequest"
 								component={PyaonRequest}
 							/>
+							<Stack.Screen name="send" component={Send} />
 						</Stack.Navigator>
 					</NavigationContainer>
 				</AppContextProvider>

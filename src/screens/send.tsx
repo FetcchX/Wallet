@@ -1,4 +1,11 @@
-import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import {
+	StyleSheet,
+	View,
+	Text,
+	TouchableOpacity,
+	Image,
+	TextInput,
+} from "react-native";
 import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -7,13 +14,17 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { ethers } from "ethers";
 import { getChain, getChains, getTokens } from "fetcch-chain-data";
 import { ScrollView } from "react-native-gesture-handler";
+import { useId } from "../hooks/useId";
 
-export const PyaonRequest = ({ navigation, route }: any) => {
-	const [request, setRequest] = useState(route.params.request);
-	const [token, setToken] = useState(route.params.request.token);
-	const [chain, setChain] = useState(
-		getChain({ internalId: route.params.request.chain })
-	);
+export const Send = ({ navigation }: any) => {
+	const { id } = useId();
+
+	const [chain, setChain] = useState(getChain({ internalId: Number(2) }));
+	console.log(id?.default.chain, "DSa");
+	const [token, setToken] = useState(getTokens);
+	const [toId, setToId] = useState("");
+	const [amount, setAmount] = useState("");
+	const [message, setMessage] = useState("");
 
 	const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -51,17 +62,36 @@ export const PyaonRequest = ({ navigation, route }: any) => {
 							fontFamily: "KronaOne_400Regular",
 						}}
 					>
-						{request.toId.id[0].toUpperCase()}
+						{toId.length > 0 && toId[0].toUpperCase()}
 					</Text>
 				</View>
-				<Text
+				<TextInput
+					defaultValue={toId}
+					onChangeText={(a) => setToId(a)}
+					placeholder="satyam@wagpay"
+					style={{
+						color: "white",
+						paddingVertical: 16,
+						fontSize: 16,
+						width: "70%",
+					}}
+				/>
+				{/* <TextInput
 					style={{
 						fontSize: 15,
 						fontFamily: "KronaOne_400Regular",
 					}}
-				>
-					{request.toId.id}
-				</Text>
+					value={toId}
+					onChangeText={(text) => setToId(text)}
+				/> */}
+				<TextInput
+					style={{
+						fontSize: 15,
+						fontFamily: "KronaOne_400Regular",
+					}}
+					value={amount}
+					onChangeText={(text) => setAmount(text)}
+				/>
 				<Text
 					style={{
 						marginTop: 10,
@@ -71,11 +101,15 @@ export const PyaonRequest = ({ navigation, route }: any) => {
 					}}
 				>
 					You need to pay{" "}
-					{ethers.utils.formatUnits(
-						request.amount,
-						request.token.decimals
-					)}{" "}
-					{request.token.name} for "{request.label}"
+					{amount && ethers.utils.formatUnits(amount, token.decimals)}{" "}
+					<TextInput
+						style={{
+							fontSize: 15,
+							fontFamily: "KronaOne_400Regular",
+						}}
+						value={message}
+						onChangeText={(text) => setMessage(text)}
+					/>
 				</Text>
 			</View>
 			<View

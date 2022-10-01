@@ -18,7 +18,7 @@ export const Assets = ({ assets }: { assets: any[] }) => {
 						fontFamily: "KronaOne_400Regular",
 					}}
 				>
-					8 Assets
+					{assets.length} Assets
 				</Text>
 				{assets.map((asset) => (
 					<Asset

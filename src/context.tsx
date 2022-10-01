@@ -110,12 +110,12 @@ export const AppContextProvider = ({ children }: Props) => {
 	// 	AsyncStorage.setItem("walletid", JSON.stringify(id));
 	// }, [id]);
 
-	// useEffect(() => {
-	// 	(async () => {
-	// 		AsyncStorage.removeItem("walletid");
-	// 		console.log(await AsyncStorage.getItem("walletid"), "dsa");
-	// 	})();
-	// });
+	useEffect(() => {
+		(async () => {
+			// AsyncStorage.removeItem("walletid");
+			console.log(await AsyncStorage.getItem("walletid"), "dsa");
+		})();
+	});
 
 	return (
 		<AppContext.Provider value={sharedState}>

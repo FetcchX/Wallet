@@ -1,5 +1,6 @@
 import {
 	ActivityIndicator,
+	AsyncStorage,
 	Image,
 	ImageBackground,
 	StyleSheet,
@@ -18,6 +19,7 @@ import { useId } from "../hooks/useId";
 import { useAppContext } from "../context";
 import { Chain, getChains } from "fetcch-chain-data";
 import { ScrollView } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
 
 // interface Chain {
 // 	icon: string;
@@ -42,7 +44,7 @@ import { ScrollView } from "react-native-gesture-handler";
 // ];
 
 export const CreateAccount = ({ navigation }: any) => {
-	const { evmWallets } = useAppContext();
+	const { evmWallets, setId } = useAppContext();
 
 	const { seedPhrase, generateSeedPhrase, generateEvmWallet } = useWallet();
 
@@ -148,6 +150,16 @@ export const CreateAccount = ({ navigation }: any) => {
 	useEffect(() => {
 		console.log("loading: ", loading);
 	}, [loading]);
+
+	useFocusEffect(
+		useCallback(() => {
+			(async () => {
+				const id = await AsyncStorage.getItem("walletid");
+				setId(JSON.parse(id as string));
+				navigation.navigate("home");
+			})();
+		}, [])
+	);
 
 	return (
 		<View style={style.container}>

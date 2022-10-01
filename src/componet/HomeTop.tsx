@@ -112,7 +112,9 @@ export const HomeTop = ({ navigation }: Props) => {
 							justifyContent: "space-around",
 						}}
 					>
-						<TouchableOpacity>
+						<TouchableOpacity
+							onPress={() => navigation.navigate("send")}
+						>
 							<Ionicons
 								name="md-arrow-up"
 								size={30}
