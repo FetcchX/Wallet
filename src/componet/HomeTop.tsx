@@ -101,7 +101,7 @@ export const HomeTop = ({ navigation }: Props) => {
 									fontFamily: "KronaOne_400Regular",
 								}}
 							>
-								8.3% (+$200)
+								0.00% (+$0)
 							</Text>
 						</View>
 					</View>

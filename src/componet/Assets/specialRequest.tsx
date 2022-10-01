@@ -15,16 +15,31 @@ export const SpacialRequest = ({ navigation }: Props) => {
 	const [request, setRequest] = useState<any>();
 
 	useEffect(() => {
-		getPaymentRequest().then((res) => {
-			if (res.length > 0) {
-				const token = getToken(res[0].token, res[0].chain.id);
-				setRequest({
-					...res[0],
-					token: token,
-				});
-			}
-		});
+		const interval = setInterval(async () => {
+			getPaymentRequest().then((res) => {
+				if (res.length > 0) {
+					const token = getToken(res[0].token, res[0].chain.id);
+					setRequest({
+						...res[0],
+						token: token,
+					});
+				}
+			});
+		}, 10000);
+		return () => clearInterval(interval);
 	}, []);
+
+	// useEffect(() => {
+	// 	getPaymentRequest().then((res) => {
+	// 		if (res.length > 0) {
+	// 			const token = getToken(res[0].token, res[0].chain.id);
+	// 			setRequest({
+	// 				...res[0],
+	// 				token: token,
+	// 			});
+	// 		}
+	// 	});
+	// }, []);
 
 	useEffect(() => {
 		console.log(request, "requ");
@@ -61,7 +76,9 @@ export const SpacialRequest = ({ navigation }: Props) => {
 				>
 					<TouchableOpacity
 						onPress={() => {
-							navigation.navigate("payOnRequest");
+							navigation.navigate("payOnRequest", {
+								request: request,
+							});
 						}}
 						style={{
 							...btn.pay,

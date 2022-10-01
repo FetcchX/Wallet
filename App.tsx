@@ -45,7 +45,7 @@ export default function App() {
 					<NavigationContainer>
 						<Stack.Navigator
 							screenOptions={{ headerShown: false }}
-							initialRouteName={"home"}
+							initialRouteName={"createAccount"}
 						>
 							<Stack.Screen
 								name="createAccount"

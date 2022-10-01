@@ -1,4 +1,10 @@
-import { ImageBackground, StyleSheet, TouchableOpacity } from "react-native";
+import {
+	ActivityIndicator,
+	Image,
+	ImageBackground,
+	StyleSheet,
+	TouchableOpacity,
+} from "react-native";
 import { Text, TextInput, View } from "react-native";
 import { size } from "superstruct";
 import { COLORS, SIZES } from "../styles/styles";
@@ -10,28 +16,30 @@ import { handlonPress } from "../hooks/useBotomsheet";
 import { useWallet } from "../hooks";
 import { useId } from "../hooks/useId";
 import { useAppContext } from "../context";
+import { Chain, getChains } from "fetcch-chain-data";
+import { ScrollView } from "react-native-gesture-handler";
 
-interface Chain {
-	logo: string;
-	name: string;
-	chainId: number;
-	internalId: number;
-}
+// interface Chain {
+// 	icon: string;
+// 	name: string;
+// 	chainId: number;
+// 	id: number;
+// }
 
-const chains: Chain[] = [
-	{
-		logo: "E",
-		name: "Ethereum Goerli",
-		chainId: 5,
-		internalId: 9,
-	},
-	{
-		logo: "P",
-		name: "Polygon Mumbai",
-		chainId: 80001,
-		internalId: 8,
-	},
-];
+// const chains: Chain[] = [
+// 	{
+// 		logo: "E",
+// 		name: "Ethereum Goerli",
+// 		chainId: 5,
+// 		internalId: 9,
+// 	},
+// 	{
+// 		logo: "P",
+// 		name: "Polygon Mumbai",
+// 		chainId: 80001,
+// 		internalId: 8,
+// 	},
+// ];
 
 export const CreateAccount = ({ navigation }: any) => {
 	const { evmWallets } = useAppContext();
@@ -46,6 +54,7 @@ export const CreateAccount = ({ navigation }: any) => {
 	const [username, setUsername] = useState("");
 
 	const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
+	const [loading, setLoading] = useState(false);
 
 	const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -64,51 +73,61 @@ export const CreateAccount = ({ navigation }: any) => {
 	};
 
 	useEffect(() => {
-		if (seedPhrase) {
-			generateEvmWallet();
-			// navigation.navigate("home");
+		try {
+			if (seedPhrase) {
+				generateEvmWallet();
+				// navigation.navigate("home");
+			}
+		} catch (e) {
+			setLoading(false);
 		}
 	}, [seedPhrase]);
 
 	useEffect(() => {
 		(async () => {
-			if (
-				evmWallets.length > 0 &&
-				selectedChains.length > 0 &&
-				username.length > 3
-			) {
+			try {
 				if (
-					selectedChains.find((chain) =>
-						chain.name.includes("Solana")
-					)
+					evmWallets.length > 0 &&
+					selectedChains.length > 0 &&
+					username.length > 3
 				) {
-				} else {
-					const defaultAddress = {
-						address: evmWallets[0].address,
-						chain: selectedChains[0].internalId,
-					};
-
-					const wallets = evmWallets.slice(1);
-
-					const otherAddresses = wallets.map((wallet) => {
-						return {
-							address: wallet.address,
-							chain: selectedChains.map((ch) => ch.internalId),
+					if (
+						selectedChains.find((chain) =>
+							chain.name.includes("Solana")
+						)
+					) {
+					} else {
+						const defaultAddress = {
+							address: evmWallets[0].address,
+							chain: selectedChains[0].internalId,
 						};
-					});
 
-					const id = await createId({
-						default: defaultAddress,
-						others: otherAddresses,
-						id: `${username}@fetcch.testnet`,
-						provider: "fetcch.testnet",
-						identifier: username,
-					});
+						const wallets = evmWallets.slice(1);
 
-					console.log(id, "id2");
+						const otherAddresses = wallets.map((wallet) => {
+							return {
+								address: wallet.address,
+								chain: selectedChains.map(
+									(ch) => ch.internalId
+								),
+							};
+						});
 
-					navigation.navigate("home");
+						const id = await createId({
+							default: defaultAddress,
+							others: otherAddresses,
+							id: `${username}@fetcch.testnet`,
+							provider: "fetcch.testnet",
+							identifier: username,
+						});
+
+						console.log(id, "id2");
+
+						navigation.navigate("home");
+					}
 				}
+			} catch (e) {
+				setLoading(false);
 			}
 		})();
 	}, [evmWallets]);
@@ -118,8 +137,17 @@ export const CreateAccount = ({ navigation }: any) => {
 	}, [id]);
 
 	const createWallet = () => {
-		generateSeedPhrase();
+		setLoading(true);
+		try {
+			generateSeedPhrase();
+		} catch (e) {
+			setLoading(false);
+		}
 	};
+
+	useEffect(() => {
+		console.log("loading: ", loading);
+	}, [loading]);
 
 	return (
 		<View style={style.container}>
@@ -201,23 +229,41 @@ export const CreateAccount = ({ navigation }: any) => {
 								flexDirection: "row",
 							}}
 						>
-							{selectedChains.map((chain: any) => (
-								<TouchableOpacity
-									style={{
-										...style.circle,
-										marginLeft: 10,
-									}}
-								>
-									<Text
+							<ScrollView
+								contentContainerStyle={{
+									display: "flex",
+									justifyContent: "flex-start",
+									alignItems: "center",
+									flexDirection: "row",
+								}}
+								horizontal={true}
+								showsHorizontalScrollIndicator={false}
+							>
+								{selectedChains.map((chain) => (
+									<TouchableOpacity
 										style={{
-											fontSize: SIZES.extralarge,
-											fontFamily: "KronaOne_400Regular",
+											...style.circle,
+											marginLeft: 10,
+										}}
+										onPress={() => {
+											let value = [...selectedChains];
+											value = value.filter(
+												(c) =>
+													c.internalId !==
+													chain.internalId
+											);
+											setSelectedChains(value);
 										}}
 									>
-										{chain.logo}
-									</Text>
-								</TouchableOpacity>
-							))}
+										<Image
+											source={{
+												uri: chain.icon,
+											}}
+											style={{ width: 32, height: 32 }}
+										/>
+									</TouchableOpacity>
+								))}
+							</ScrollView>
 						</View>
 						<TouchableOpacity
 							onPress={() => {
@@ -242,19 +288,24 @@ export const CreateAccount = ({ navigation }: any) => {
 					<View>
 						<TouchableOpacity
 							onPress={() => {
+								setLoading(true);
 								createWallet();
 							}}
 							style={style.next}
 						>
-							<Text
-								style={{
-									fontSize: SIZES.extralarge,
-									fontFamily: "KronaOne_400Regular",
-									textAlign: "center",
-								}}
-							>
-								Next
-							</Text>
+							{loading ? (
+								<ActivityIndicator size={20} color="white" />
+							) : (
+								<Text
+									style={{
+										fontSize: SIZES.extralarge,
+										fontFamily: "KronaOne_400Regular",
+										textAlign: "center",
+									}}
+								>
+									Next
+								</Text>
+							)}
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -274,43 +325,43 @@ export const CreateAccount = ({ navigation }: any) => {
 						padding: 10,
 					}}
 				>
-					{chains.map((chain) => (
-						<TouchableOpacity
-							style={{
-								width: "100%",
-								display: "flex",
-								flexDirection: "row",
-								justifyContent: "flex-start",
-								alignItems: "center",
-							}}
-							onPress={() => {
-								console.log(selectedChains, chain);
-								let value = [...selectedChains];
-								value.push(chain);
-								setSelectedChains(value);
-							}}
-						>
-							<TouchableOpacity style={style.circle}>
+					<ScrollView showsVerticalScrollIndicator={false}>
+						{getChains().map((chain) => (
+							<TouchableOpacity
+								style={{
+									width: "100%",
+									display: "flex",
+									flexDirection: "row",
+									justifyContent: "flex-start",
+									alignItems: "center",
+								}}
+								onPress={() => {
+									console.log(selectedChains, chain);
+									let value = [...selectedChains];
+									value.push(chain);
+									setSelectedChains(value);
+								}}
+							>
+								<TouchableOpacity style={style.circle}>
+									<Image
+										source={{
+											uri: chain.icon,
+										}}
+										style={{ width: 32, height: 32 }}
+									/>
+								</TouchableOpacity>
 								<Text
 									style={{
-										fontSize: SIZES.extralarge,
+										marginLeft: 20,
+										fontSize: 14,
 										fontFamily: "KronaOne_400Regular",
 									}}
 								>
-									{chain.logo}
+									{chain.name}
 								</Text>
 							</TouchableOpacity>
-							<Text
-								style={{
-									marginLeft: 20,
-									fontSize: 14,
-									fontFamily: "KronaOne_400Regular",
-								}}
-							>
-								{chain.name}
-							</Text>
-						</TouchableOpacity>
-					))}
+						))}
+					</ScrollView>
 				</View>
 			</BottomSheet>
 		</View>

@@ -36,7 +36,9 @@ export const Request = ({ navigation, request }: Props) => {
 				>
 					<TouchableOpacity
 						onPress={() => {
-							navigation.navigate("payOnRequest");
+							navigation.navigate("payOnRequest", {
+								request: request,
+							});
 						}}
 						style={{
 							...btn.pay,
