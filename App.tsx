@@ -24,52 +24,40 @@ import { Send } from "./src/screens/send";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-	let [fontsLoaded] = useFonts({
-		KronaOne_400Regular,
-	});
+  let [fontsLoaded] = useFonts({
+    KronaOne_400Regular,
+  });
 
-	let fontSize = 24;
-	let paddingVertical = 6;
+  let fontSize = 24;
+  let paddingVertical = 6;
 
-	if (!fontsLoaded) {
-		return <AppLoading />;
-	}
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
 
-	return (
-		<>
-			<GestureHandlerRootView
-				style={{
-					flex: 1,
-				}}
-			>
-				<AppContextProvider>
-					<NavigationContainer>
-						<Stack.Navigator
-							screenOptions={{ headerShown: false }}
-							initialRouteName={"createAccount"}
-						>
-							<Stack.Screen
-								name="createAccount"
-								component={CreateAccount}
-							/>
-							<Stack.Screen name="home" component={Main} />
-							<Stack.Screen
-								name="requests"
-								component={Requests}
-							/>
-							<Stack.Screen
-								name="success"
-								component={Succesfull}
-							/>
-							<Stack.Screen
-								name="payOnRequest"
-								component={PyaonRequest}
-							/>
-							<Stack.Screen name="send" component={Send} />
-						</Stack.Navigator>
-					</NavigationContainer>
-				</AppContextProvider>
-			</GestureHandlerRootView>
-		</>
-	);
+  return (
+    <>
+      <GestureHandlerRootView
+        style={{
+          flex: 1,
+        }}
+      >
+        <AppContextProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{ headerShown: false }}
+              initialRouteName={"createAccount"}
+            >
+              <Stack.Screen name="createAccount" component={CreateAccount} />
+              <Stack.Screen name="home" component={Main} />
+              <Stack.Screen name="requests" component={Requests} />
+              <Stack.Screen name="success" component={Succesfull} />
+              <Stack.Screen name="payOnRequest" component={PyaonRequest} />
+              <Stack.Screen name="send" component={Send} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AppContextProvider>
+      </GestureHandlerRootView>
+    </>
+  );
 }
