@@ -25,7 +25,7 @@ export const PyaonRequest = ({ navigation, route }: any) => {
 			fromAddress: evmWallets[0].address,
 			fromId: id?.id as string,
 			fromToken: token.address,
-			fromChain: chain?.internalId.toString() as string,
+			fromChain: chain?.internalId as number,
 		});
 	};
 

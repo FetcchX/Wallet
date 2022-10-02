@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+	ImageBackground,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import { COLORS, SIZES } from "../styles/styles";
 import { Assets } from "./Assets";
 import { SpacialRequest } from "./Assets/specialRequest";
@@ -18,12 +24,13 @@ export const HomeTop = ({ navigation }: Props) => {
 	const [erc20, setERC20] = useState<any[]>([]);
 
 	useEffect(() => {
-		getNativeBalance(id?.default.chain.chainId as string).then(
-			(balance) => {
-				console.log(balance);
-				setBalance(balance);
-			}
-		);
+		id &&
+			getNativeBalance(id?.default.chain.chainId as string).then(
+				(balance) => {
+					console.log(balance);
+					setBalance(balance);
+				}
+			);
 
 		getERC20Balance(id?.default.chain.chainId as string).then((balance) =>
 			setERC20(balance)
@@ -68,70 +75,75 @@ export const HomeTop = ({ navigation }: Props) => {
 						justifyContent: "space-between",
 					}}
 				>
-					<View>
-						<Text
-							style={{
-								color: "white",
-								fontSize: 27,
-								fontFamily: "KronaOne_400Regular",
-							}}
-						>
-							$ {balance}
-						</Text>
-
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-							}}
-						>
-							<Ionicons
-								name="md-arrow-up-outline"
-								style={{
-									transform: [{ rotate: "30deg" }],
-									color: "white",
-								}}
-								size={24}
-							/>
+					<ImageBackground
+						resizeMode="cover"
+						source={require("../../assets/card.png")}
+					>
+						<View>
 							<Text
 								style={{
 									color: "white",
-									fontSize: SIZES.small,
+									fontSize: 27,
 									fontFamily: "KronaOne_400Regular",
 								}}
 							>
-								0.00% (+$0)
+								$ {balance}
 							</Text>
+
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+								}}
+							>
+								<Ionicons
+									name="md-arrow-up-outline"
+									style={{
+										transform: [{ rotate: "30deg" }],
+										color: "white",
+									}}
+									size={24}
+								/>
+								<Text
+									style={{
+										color: "white",
+										fontSize: SIZES.small,
+										fontFamily: "KronaOne_400Regular",
+									}}
+								>
+									0.00% (+$0)
+								</Text>
+							</View>
 						</View>
-					</View>
-					<View
-						style={{
-							width: "100%",
-							flexDirection: "row",
-							justifyContent: "space-around",
-						}}
-					>
-						<TouchableOpacity
-							onPress={() => navigation.navigate("send")}
+						<View
+							style={{
+								width: "100%",
+								flexDirection: "row",
+								justifyContent: "space-around",
+							}}
 						>
-							<Ionicons
-								name="md-arrow-up"
-								size={30}
-								style={{
-									color: "white",
-								}}
-							/>
-						</TouchableOpacity>
-						<TouchableOpacity>
-							<Ionicons
-								size={30}
-								style={{
-									color: "white",
-								}}
-								name="md-arrow-down"
-							/>
-						</TouchableOpacity>
-					</View>
+							<TouchableOpacity
+								onPress={() => navigation.navigate("send")}
+							>
+								<Ionicons
+									name="md-arrow-up"
+									size={30}
+									style={{
+										color: "white",
+									}}
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity>
+								<Ionicons
+									size={30}
+									style={{
+										color: "white",
+									}}
+									name="md-arrow-down"
+								/>
+							</TouchableOpacity>
+						</View>
+					</ImageBackground>
 				</View>
 			</View>
 			<SpacialRequest navigation={navigation} />
