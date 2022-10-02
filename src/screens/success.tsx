@@ -26,14 +26,20 @@ export const Succesfull = ({ navigation, route }: any) => {
             <Header />
             <View
               style={{
-                flex: 1,
                 alignItems: "center",
                 justifyContent: "space-between",
               }}
             >
-              <Done />
+              <View
+                style={{
+                  marginTop: -50,
+                }}
+              >
+                <Done />
+              </View>
               <Text
                 style={{
+                  marginTop: 60,
                   textAlign: "center",
                   fontSize: SIZES.extralarge,
                 }}
