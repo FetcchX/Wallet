@@ -63,6 +63,8 @@ interface AppContext {
 	setSolanaWallets: Dispatch<SetStateAction<Wallet[]>>;
 	seedPhrase: string;
 	setSeedPhrase: Dispatch<SetStateAction<string>>;
+	account: Wallet | undefined;
+	setAccount: Dispatch<SetStateAction<Wallet | undefined>>;
 }
 
 const AppContext = createContext<AppContext>({} as AppContext);
@@ -86,6 +88,7 @@ export const AppContextProvider = ({ children }: Props) => {
 	const [evmWallets, setEvmWallets] = useState<Wallet[]>([]);
 	const [solanaWallets, setSolanaWallets] = useState<Wallet[]>([]);
 	const [seedPhrase, setSeedPhrase] = useState("");
+	const [account, setAccount] = useState<Wallet>();
 
 	const { getId } = useId();
 
@@ -98,7 +101,18 @@ export const AppContextProvider = ({ children }: Props) => {
 		setSolanaWallets,
 		seedPhrase,
 		setSeedPhrase,
+		account,
+		setAccount,
 	};
+
+	useEffect(() => {
+		if (id && !account) {
+			const wallet = evmWallets.find(
+				(wallet) => wallet.address === id.default.address
+			);
+			setAccount(wallet);
+		}
+	}, [id]);
 
 	useEffect(() => {
 		console.log(id, "id");

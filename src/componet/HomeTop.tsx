@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const HomeTop = ({ navigation }: Props) => {
-	const { id } = useAppContext();
+	const { id, account } = useAppContext();
 	const { getNativeBalance, getERC20Balance } = useBalance();
 	const [balance, setBalance] = useState(0);
 	const [erc20, setERC20] = useState<any[]>([]);
@@ -124,6 +124,7 @@ export const HomeTop = ({ navigation }: Props) => {
 								width: "100%",
 								flexDirection: "row",
 								justifyContent: "space-around",
+								marginTop: 20,
 							}}
 						>
 							<TouchableOpacity
@@ -150,7 +151,7 @@ export const HomeTop = ({ navigation }: Props) => {
 					</ImageBackground>
 				</View>
 			</View>
-			<SpacialRequest navigation={navigation} />
+			{/* <SpacialRequest navigation={navigation} /> */}
 			<Assets assets={erc20} />
 		</View>
 	);

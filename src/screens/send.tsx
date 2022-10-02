@@ -406,6 +406,7 @@ export const Send = ({ navigation }: any) => {
 					contentContainerStyle={{
 						padding: 10,
 						backgroundColor: COLORS.secondary,
+						height: "100%",
 					}}
 					showsVerticalScrollIndicator={false}
 				>
@@ -448,6 +449,7 @@ export const Send = ({ navigation }: any) => {
 					contentContainerStyle={{
 						padding: 10,
 						backgroundColor: COLORS.secondary,
+						height: "100%",
 					}}
 					showsVerticalScrollIndicator={false}
 				>

@@ -91,7 +91,14 @@ export const useBalance = () => {
 			const data = await res.data;
 			console.log(data);
 
-			return data;
+			const list = data.map((d: any) => {
+				return {
+					...d,
+					address: d.token_address,
+				};
+			});
+
+			return list;
 		} catch (e) {
 			throw e;
 		}
@@ -127,18 +134,20 @@ export const useBalance = () => {
 				console.log(data);
 
 				for (let j = 0; j < data.length; j++) {
+					const x = {
+						...data[j],
+						address: data[j].address,
+					};
+
 					const a = balance.indexOf(
-						(i: any) => data[j].token_address === i.token_address
+						(i: any) => x.token_address === i.token_address
 					);
 					if (a > -1) {
 						balance[a].balance += Number(
-							ethers.utils.formatUnits(
-								data[j].balance,
-								data[j].decimals
-							)
+							ethers.utils.formatUnits(x.balance, x.decimals)
 						);
 					} else {
-						balance.push(data[j]);
+						balance.push(x);
 					}
 				}
 			}

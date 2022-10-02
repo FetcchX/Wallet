@@ -1,19 +1,20 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { SIZES } from "../../styles/styles";
 import DOne from "../../../assets/logo.svg";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { any } from "superstruct";
 import { useId } from "../../hooks/useId";
 import { useWallet } from "../../hooks";
+import { useAppContext } from "../../context";
 
-export const Header = () => {
+export const Header = ({ handleTokenOpenPress }: any) => {
 	const { id } = useId();
-	const { evmWallets } = useWallet();
-
+	const { evmWallets } = useAppContext();
+	console.log(handleTokenOpenPress);
 	return (
 		<View
 			style={{
@@ -38,7 +39,12 @@ export const Header = () => {
 					>
 						{id?.id}
 					</Text>
-					<View style={headerstyles.circle}></View>
+					<TouchableOpacity
+						style={headerstyles.circle}
+						onPress={() => {
+							handleTokenOpenPress();
+						}}
+					/>
 				</View>
 			</TouchableOpacity>
 		</View>

@@ -32,61 +32,64 @@ export const Succesfull = ({ navigation, route }: any) => {
 							}}
 						>
 							<Done />
-							<Text
-								style={{
-									textAlign: "center",
-									fontSize: 20,
-									fontFamily: "KronaOne_400Regular",
-								}}
-							>
-								{route.params.amount} {route.params.token.name}{" "}
-								has been successfully sent to{" "}
-								{route.params.toId}
-							</Text>
-						</View>
-						<View>
-							<TouchableOpacity
-								style={{
-									...style.button,
-									backgroundColor: "transparent",
-									borderWidth: 2,
-									borderColor: COLORS.secondary,
-								}}
-								onPress={() => {
-									Linking.openURL(
-										`${route.params.explorerUrl}/tx/${route.params.tx}`
-									);
-								}}
-							>
-								<Text
-									style={{
-										width: "100%",
-										textAlign: "center",
-										fontFamily: "KronaOne_400Regular",
-									}}
-								>
-									View Transaction
-								</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								onPress={() => {
-									navigation.navigate("home");
-								}}
-								style={style.button}
-							>
-								<Text
-									style={{
-										width: "100%",
-										textAlign: "center",
-										fontFamily: "KronaOne_400Regular",
-									}}
-								>
-									Return to Home
-								</Text>
-							</TouchableOpacity>
 						</View>
 					</View>
 				</Safe>
+				<View style={style.bottom}>
+					<Text
+						style={{
+							textAlign: "center",
+							fontSize: 20,
+							fontFamily: "KronaOne_400Regular",
+							color: "white",
+						}}
+					>
+						{route.params.amount} {route.params.token.name} has been
+						successfully sent to {route.params.toId}
+					</Text>
+					<View>
+						<TouchableOpacity
+							style={{
+								...style.button,
+								backgroundColor: "transparent",
+								borderWidth: 2,
+								borderColor: COLORS.secondary,
+							}}
+							onPress={() => {
+								Linking.openURL(
+									`${route.params.explorerUrl}/tx/${route.params.tx}`
+								);
+							}}
+						>
+							<Text
+								style={{
+									width: "100%",
+									textAlign: "center",
+									fontFamily: "KronaOne_400Regular",
+									color: "white",
+								}}
+							>
+								View Transaction
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate("home");
+							}}
+							style={style.button}
+						>
+							<Text
+								style={{
+									width: "100%",
+									textAlign: "center",
+									fontFamily: "KronaOne_400Regular",
+								}}
+							>
+								Return to Home
+							</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
 			</ImageBackground>
 		</>
 	);
@@ -95,9 +98,17 @@ export const Succesfull = ({ navigation, route }: any) => {
 const style = StyleSheet.create({
 	container: {
 		width: "100%",
-		height: "100%",
+		height: "55%",
 		alignItems: "center",
 		justifyContent: "space-between",
+	},
+	bottom: {
+		backgroundColor: COLORS.primary,
+		padding: SIZES.extralarge,
+		borderRadius: 23,
+		justifyContent: "space-around",
+		height: "45%",
+		width: "100%",
 	},
 	button: {
 		width: "100%",
