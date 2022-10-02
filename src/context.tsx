@@ -60,6 +60,8 @@ interface AppContext {
 	setEvmWallets: Dispatch<SetStateAction<Wallet[]>>;
 	solanaWallets: Wallet[];
 	setSolanaWallets: Dispatch<SetStateAction<Wallet[]>>;
+	seedPhrase: string;
+	setSeedPhrase: Dispatch<SetStateAction<string>>;
 }
 
 const AppContext = createContext<AppContext>({} as AppContext);
@@ -82,6 +84,7 @@ export const AppContextProvider = ({ children }: Props) => {
 	const [id, setId] = useState<WalletId | null>(null);
 	const [evmWallets, setEvmWallets] = useState<Wallet[]>([]);
 	const [solanaWallets, setSolanaWallets] = useState<Wallet[]>([]);
+	const [seedPhrase, setSeedPhrase] = useState("");
 
 	const sharedState = {
 		id,
@@ -90,6 +93,8 @@ export const AppContextProvider = ({ children }: Props) => {
 		setEvmWallets,
 		solanaWallets,
 		setSolanaWallets,
+		seedPhrase,
+		setSeedPhrase,
 	};
 
 	useEffect(() => {
@@ -101,6 +106,30 @@ export const AppContextProvider = ({ children }: Props) => {
 	useEffect(() => {
 		(async () => {
 			const a: any = await AsyncStorage.getItem("walletid");
+			setId(JSON.parse(a));
+		})();
+	}, []);
+
+	useEffect(() => {
+		if (evmWallets.length <= 0) return;
+		AsyncStorage.setItem("evmwallets", JSON.stringify(evmWallets));
+	}, [evmWallets]);
+
+	useEffect(() => {
+		(async () => {
+			const a: any = await AsyncStorage.getItem("evmwallets");
+			setId(JSON.parse(a));
+		})();
+	}, []);
+
+	useEffect(() => {
+		if (evmWallets.length <= 0) return;
+		AsyncStorage.setItem("seedphrase", seedPhrase);
+	}, [seedPhrase]);
+
+	useEffect(() => {
+		(async () => {
+			const a: any = await AsyncStorage.getItem("seedphrase");
 			setId(JSON.parse(a));
 		})();
 	}, []);

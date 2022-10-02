@@ -15,9 +15,11 @@ import { ethers } from "ethers";
 import { getChain, getChains, getTokens } from "fetcch-chain-data";
 import { ScrollView } from "react-native-gesture-handler";
 import { useId } from "../hooks/useId";
+import { useAppContext } from "../context";
 
 export const Send = ({ navigation }: any) => {
 	const { id } = useId();
+	const { evmWallets } = useAppContext();
 
 	const [chain, setChain] = useState(getChain({ internalId: Number(2) }));
 	console.log(id?.default.chain, "DSa");
@@ -70,27 +72,12 @@ export const Send = ({ navigation }: any) => {
 					onChangeText={(a) => setToId(a)}
 					placeholder="satyam@wagpay"
 					style={{
-						color: "white",
+						color: "black",
 						paddingVertical: 16,
 						fontSize: 16,
-						width: "70%",
+						width: "100%",
+						textAlign: "center",
 					}}
-				/>
-				{/* <TextInput
-					style={{
-						fontSize: 15,
-						fontFamily: "KronaOne_400Regular",
-					}}
-					value={toId}
-					onChangeText={(text) => setToId(text)}
-				/> */}
-				<TextInput
-					style={{
-						fontSize: 15,
-						fontFamily: "KronaOne_400Regular",
-					}}
-					value={amount}
-					onChangeText={(text) => setAmount(text)}
 				/>
 				<Text
 					style={{
@@ -100,16 +87,29 @@ export const Send = ({ navigation }: any) => {
 						fontFamily: "KronaOne_400Regular",
 					}}
 				>
-					You need to pay{" "}
-					{amount && ethers.utils.formatUnits(amount, token.decimals)}{" "}
-					<TextInput
-						style={{
-							fontSize: 15,
-							fontFamily: "KronaOne_400Regular",
-						}}
-						value={message}
-						onChangeText={(text) => setMessage(text)}
-					/>
+					You are going to pay{" "}
+				</Text>
+				<TextInput
+					defaultValue={amount}
+					onChangeText={(a) => !isNaN(Number(a)) && setAmount(a)}
+					placeholder="amount"
+					style={{
+						marginTop: 5,
+						color: "black",
+						fontSize: 16,
+						width: "70%",
+						textAlign: "center",
+						fontFamily: "KronaOne_400Regular",
+					}}
+				/>
+				<Text
+					style={{
+						fontSize: 12,
+						textAlign: "center",
+						fontFamily: "KronaOne_400Regular",
+					}}
+				>
+					{token.name}
 				</Text>
 			</View>
 			<View
@@ -278,7 +278,39 @@ export const Send = ({ navigation }: any) => {
 				snapPoints={snapPoints}
 				onChange={handleSheetChanges}
 			>
-				<Text>Accounts 🎉</Text>
+				<ScrollView
+					contentContainerStyle={{
+						padding: 10,
+						backgroundColor: COLORS.secondary,
+					}}
+					showsVerticalScrollIndicator={false}
+				>
+					{evmWallets.map((wallet) => (
+						<TouchableOpacity
+							style={{
+								width: "100%",
+								display: "flex",
+								flexDirection: "row",
+								justifyContent: "flex-start",
+								alignItems: "center",
+								marginBottom: 10,
+							}}
+							onPress={() => {
+								setToken(token);
+							}}
+						>
+							<Text
+								style={{
+									marginLeft: 20,
+									fontSize: 14,
+									fontFamily: "KronaOne_400Regular",
+								}}
+							>
+								{wallet.address}
+							</Text>
+						</TouchableOpacity>
+					))}
+				</ScrollView>
 			</BottomSheet>
 			<BottomSheet
 				enablePanDownToClose={true}
@@ -342,6 +374,9 @@ const style = StyleSheet.create({
 	},
 	top: {
 		height: "50%",
+		display: "flex",
+		flexDirection: "column",
+		width: "100%",
 		justifyContent: "center",
 		alignItems: "center",
 		paddingHorizontal: 22,

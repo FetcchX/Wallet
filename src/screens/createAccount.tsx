@@ -155,6 +155,7 @@ export const CreateAccount = ({ navigation }: any) => {
 		useCallback(() => {
 			(async () => {
 				const id = await AsyncStorage.getItem("walletid");
+				if (!id) return;
 				setId(JSON.parse(id as string));
 				navigation.navigate("home");
 			})();
