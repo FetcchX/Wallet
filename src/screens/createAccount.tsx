@@ -1,5 +1,6 @@
 import {
 	ActivityIndicator,
+	Alert,
 	AsyncStorage,
 	Image,
 	ImageBackground,
@@ -20,6 +21,7 @@ import { useAppContext } from "../context";
 import { Chain, getChains } from "fetcch-chain-data";
 import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
+import { useChain } from "../hooks/useChain";
 
 // interface Chain {
 // 	icon: string;
@@ -45,7 +47,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export const CreateAccount = ({ navigation }: any) => {
 	const { evmWallets, setId } = useAppContext();
-
+	const { getChains } = useChain();
 	const { seedPhrase, generateSeedPhrase, generateEvmWallet } = useWallet();
 
 	const { id, createId } = useId();
@@ -54,8 +56,10 @@ export const CreateAccount = ({ navigation }: any) => {
 	const [num, setNum] = useState(-1);
 
 	const [username, setUsername] = useState("");
+	const [failed, setFailed] = useState(false);
 
-	const [selectedChains, setSelectedChains] = useState<Chain[]>([]);
+	const [chains, setChains] = useState<any[]>([]);
+	const [selectedChains, setSelectedChains] = useState<any[]>([]);
 	const [loading, setLoading] = useState(false);
 
 	const bottomSheetRef = useRef<BottomSheet>(null);
@@ -73,6 +77,12 @@ export const CreateAccount = ({ navigation }: any) => {
 			bottomSheetRef as React.MutableRefObject<BottomSheet>
 		).current.expand();
 	};
+	useEffect(() => {
+		(async () => {
+			const totalChains = await getChains();
+			setChains(totalChains);
+		})();
+	}, []);
 
 	// useEffect(() => {
 	// 	try {
@@ -97,10 +107,7 @@ export const CreateAccount = ({ navigation }: any) => {
 					console.log("22");
 					const defaultAddress = {
 						address: evmWallets[0].address,
-						chain:
-							selectedChains[0].internalId == 12
-								? 8
-								: selectedChains[0].internalId,
+						chain: selectedChains[0].id,
 					};
 					console.log(defaultAddress);
 
@@ -109,9 +116,7 @@ export const CreateAccount = ({ navigation }: any) => {
 					const otherAddresses = wallets.map((wallet) => {
 						return {
 							address: wallet.address,
-							chain: selectedChains.map((ch) =>
-								ch.internalId == 12 ? 8 : ch.internalId
-							),
+							chain: selectedChains.map((ch) => ch.id),
 						};
 					});
 					console.log(otherAddresses);
@@ -131,6 +136,7 @@ export const CreateAccount = ({ navigation }: any) => {
 			} catch (e) {
 				console.log(e, "@");
 				setLoading(false);
+				setFailed(true);
 			}
 		})();
 	}, [evmWallets]);
@@ -146,6 +152,7 @@ export const CreateAccount = ({ navigation }: any) => {
 		} catch (e) {
 			console.log(e);
 			setLoading(false);
+			setFailed(true);
 		}
 	};
 
@@ -153,13 +160,25 @@ export const CreateAccount = ({ navigation }: any) => {
 		console.log("loading: ", loading);
 	}, [loading]);
 
+	const { getId } = useId();
+
+	useEffect(() => {
+		if (failed) {
+			Alert.alert(`${username}@fetcch.testnet already exists!`);
+			setFailed(false);
+		}
+	}, [failed]);
+
 	useFocusEffect(
 		useCallback(() => {
 			(async () => {
-				const id = await AsyncStorage.getItem("walletid");
-				console.log(id, "das");
+				const a: any = await AsyncStorage.getItem("walletid");
+				const id = await getId({
+					id: JSON.parse(a).id,
+				});
 				if (!id) return;
-				setId(JSON.parse(id as string));
+				console.log(id, "dsadsadas");
+				setId(id);
 				navigation.navigate("home");
 			})();
 		}, [])
@@ -342,7 +361,7 @@ export const CreateAccount = ({ navigation }: any) => {
 					}}
 				>
 					<ScrollView showsVerticalScrollIndicator={false}>
-						{getChains().map((chain) => (
+						{chains.map((chain: any) => (
 							<TouchableOpacity
 								style={{
 									width: "100%",

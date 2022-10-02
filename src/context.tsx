@@ -8,6 +8,7 @@ import {
 	useState,
 } from "react";
 import { AsyncStorage } from "react-native";
+import { useId } from "./hooks/useId";
 
 export interface WalletId {
 	id: string;
@@ -86,6 +87,8 @@ export const AppContextProvider = ({ children }: Props) => {
 	const [solanaWallets, setSolanaWallets] = useState<Wallet[]>([]);
 	const [seedPhrase, setSeedPhrase] = useState("");
 
+	const { getId } = useId();
+
 	const sharedState = {
 		id,
 		setId,
@@ -106,7 +109,11 @@ export const AppContextProvider = ({ children }: Props) => {
 	useEffect(() => {
 		(async () => {
 			const a: any = await AsyncStorage.getItem("walletid");
-			setId(JSON.parse(a));
+			const id = await getId({
+				id: JSON.parse(a).id,
+			});
+			console.log(id, "dsadsadas");
+			setId(id);
 		})();
 	}, []);
 
@@ -144,7 +151,8 @@ export const AppContextProvider = ({ children }: Props) => {
 			// AsyncStorage.removeItem("walletid");
 			// AsyncStorage.removeItem("seedphrase");
 			// AsyncStorage.removeItem("evmwallets");
-			console.log(await AsyncStorage.getItem("walletid"), "dsa");
+			// console.log("done");
+			// console.log(await AsyncStorage.getItem("walletid"), "dsa");
 		})();
 	});
 

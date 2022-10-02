@@ -10,8 +10,9 @@ import { Assets } from "./Assets";
 import { SpacialRequest } from "./Assets/specialRequest";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useBalance } from "../hooks/useBalance";
-import { useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { useAppContext } from "../context";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface Props {
 	navigation: any;
@@ -23,19 +24,22 @@ export const HomeTop = ({ navigation }: Props) => {
 	const [balance, setBalance] = useState(0);
 	const [erc20, setERC20] = useState<any[]>([]);
 
-	useEffect(() => {
-		id &&
-			getNativeBalance(id?.default.chain.chainId as string).then(
-				(balance) => {
-					console.log(balance);
-					setBalance(balance);
-				}
-			);
+	useFocusEffect(
+		useCallback(() => {
+			console.log(id, "Dsadasdrwhroughddhbfbcbikbj");
+			id &&
+				getNativeBalance(id?.default.chain.chainId as string).then(
+					(balance) => {
+						console.log(balance);
+						setBalance(balance);
+					}
+				);
 
-		getERC20Balance(id?.default.chain.chainId as string).then((balance) =>
-			setERC20(balance)
-		);
-	}, []);
+			getERC20Balance(id?.default.chain.chainId as string).then(
+				(balance) => setERC20(balance)
+			);
+		}, [])
+	);
 
 	return (
 		<View style={style.constainer}>
@@ -87,7 +91,7 @@ export const HomeTop = ({ navigation }: Props) => {
 									fontFamily: "KronaOne_400Regular",
 								}}
 							>
-								$ {balance}
+								$ {balance.toFixed(3)}
 							</Text>
 
 							<View

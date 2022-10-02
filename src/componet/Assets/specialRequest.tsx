@@ -49,79 +49,87 @@ export const SpacialRequest = ({ navigation }: Props) => {
 
 	return (
 		<>
-			<View style={style.requestcontainer}>
-				<Text
-					style={{
-						...textStyles.text,
-						fontSize: 12,
-						textAlign: "center",
-						fontFamily: "KronaOne_400Regular",
-						marginTop: SIZES.extralarge,
-					}}
-				>
-					Pay{" "}
-					{ethers.utils.formatUnits(
-						request.amount,
-						request.token.decimals
-					)}{" "}
-					{request.token.name} to {request.toId.id} for “
-					{request.label}” at {request.message}
-				</Text>
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-around",
-						marginVertical: SIZES.extralarge,
-					}}
-				>
-					<TouchableOpacity
-						onPress={() => {
-							navigation.navigate("payOnRequest", {
-								request: request,
-							});
-						}}
+			{!request || request === null ? (
+				<></>
+			) : (
+				<View style={style.requestcontainer}>
+					<Text
 						style={{
-							...btn.pay,
-							justifyContent: "center",
+							...textStyles.text,
+							fontSize: 12,
+							textAlign: "center",
+							fontFamily: "KronaOne_400Regular",
+							marginTop: SIZES.extralarge,
 						}}
 					>
-						<Text
+						Pay{" "}
+						{request &&
+							request.token &&
+							ethers.utils.formatUnits(
+								request.amount,
+								request.token.decimals
+							)}{" "}
+						{request && request.token.name} to{" "}
+						{request && request.toId.id} for “
+						{request && request.label}” at{" "}
+						{request && request.message}
+					</Text>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-around",
+							marginVertical: SIZES.extralarge,
+						}}
+					>
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate("payOnRequest", {
+									request: request,
+								});
+							}}
 							style={{
-								...textStyles.textDark,
-								padding: 10,
-								fontSize: 14,
-								fontFamily: "KronaOne_400Regular",
+								...btn.pay,
+								justifyContent: "center",
 							}}
 						>
-							Pay
-						</Text>
-					</TouchableOpacity>
+							<Text
+								style={{
+									...textStyles.textDark,
+									padding: 10,
+									fontSize: 14,
+									fontFamily: "KronaOne_400Regular",
+								}}
+							>
+								Pay
+							</Text>
+						</TouchableOpacity>
 
-					<TouchableOpacity
-						onPress={() => {
-							navigation.navigate("requests");
-						}}
-						style={{
-							borderColor: COLORS.secondary,
-							borderWidth: 1,
-							borderRadius: 100,
-							paddingHorizontal: 16,
-							justifyContent: "center",
-						}}
-					>
-						<Text
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate("requests");
+							}}
 							style={{
-								...textStyles.textDark,
-								color: COLORS.secondary,
-								fontSize: 14,
-								fontFamily: "KronaOne_400Regular",
+								borderColor: COLORS.secondary,
+								borderWidth: 1,
+								borderRadius: 100,
+								paddingHorizontal: 16,
+								justifyContent: "center",
 							}}
 						>
-							View All
-						</Text>
-					</TouchableOpacity>
+							<Text
+								style={{
+									...textStyles.textDark,
+									color: COLORS.secondary,
+									fontSize: 14,
+									fontFamily: "KronaOne_400Regular",
+								}}
+							>
+								View All
+							</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
-			</View>
+			)}
 		</>
 	);
 };

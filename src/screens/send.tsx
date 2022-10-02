@@ -17,20 +17,34 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useId } from "../hooks/useId";
 import { useAppContext } from "../context";
 import { useBalance } from "../hooks/useBalance";
+import { useChain } from "../hooks/useChain";
 
 export const Send = ({ navigation }: any) => {
 	const { getAddressERC20Balance, getAddressNativeBalance } = useBalance();
 	const { id } = useId();
 	const { evmWallets } = useAppContext();
+	const { getChains } = useChain();
 
-	const [chain, setChain] = useState(getChain({ internalId: Number(12) }));
-	console.log(id?.default.chain, "DSa");
-	const [token, setToken] = useState(getTokens(chain?.internalId)[0]);
+	const [chain, setChain] = useState<any>();
+	const [chains, setChains] = useState<any[]>([]);
+	const [token, setToken] = useState(getTokens(1)[0]);
 	const [tokens, setTokens] = useState<any[]>([]);
 	const [toId, setToId] = useState("");
 	const [amount, setAmount] = useState("");
 	const [account, setAccount] = useState(evmWallets[0]);
 	const [message, setMessage] = useState("");
+
+	useEffect(() => {
+		(async () => {
+			const totalChains = await getChains();
+			console.log(totalChains, "Dsadsa");
+			const chain = totalChains.filter(
+				(chain) => chain.id === id?.default.chain.id
+			);
+			setChain(chain);
+			setChains(totalChains);
+		})();
+	}, []);
 
 	useEffect(() => {
 		(async () => {
@@ -88,11 +102,21 @@ export const Send = ({ navigation }: any) => {
 	const { buildTransaction, createPaymentRequest, findAddress } = useId();
 
 	const pay = async () => {
-		const address = await findAddress(toId);
+		// const address = await findAddress(toId);
+		// console.log({
+		// 	toId: toId,
+		// 	chain: chain.id,
+		// 	amount: ethers.utils.parseUnits(amount, token.decimals).toString(),
+		// 	message: "Payment",
+		// 	label: "#01",
+		// 	token: token.address
+		// 		? token.address
+		// 		: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+		// });
 
 		const paymentRequest = await createPaymentRequest({
 			toId: toId,
-			chain: 7,
+			chain: chain.id,
 			amount: ethers.utils.parseUnits(amount, token.decimals).toString(),
 			message: "Payment",
 			label: "#01",
@@ -104,14 +128,12 @@ export const Send = ({ navigation }: any) => {
 		console.log(paymentRequest);
 
 		const tx = await buildTransaction(paymentRequest.id, {
-			fromAddress: evmWallets[0].address,
+			fromAddress: account.address,
 			fromId: id?.id as string,
 			fromToken: token.address
 				? token.address
 				: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-			fromChain: (chain?.internalId === 12
-				? 7
-				: chain?.internalId) as number,
+			fromChain: chain.id,
 		});
 
 		let wallet = new ethers.Wallet(account.privateKey);
@@ -123,11 +145,12 @@ export const Send = ({ navigation }: any) => {
 		const sentTx = await wallet.sendTransaction(tx.transactionData);
 		await sentTx.wait();
 		navigation.navigate("success", {
-			chainId: chain?.internalId,
+			chainId: 7,
 			tx: sentTx.hash,
-			amount: ethers.utils.parseUnits(amount, token.decimals).toString(),
+			amount: amount,
 			toId: toId,
 			token: token,
+			explorerUrl: chain.explorers[0].url,
 		});
 	};
 
@@ -218,31 +241,33 @@ export const Send = ({ navigation }: any) => {
 					horizontal={true}
 					showsHorizontalScrollIndicator={false}
 				>
-					{getChains()
-						.filter((c) => c.chainId !== chain?.chainId)
-						.map((chain) => (
-							<TouchableOpacity
-								style={{
-									...style.circle,
-									marginHorizontal: 22,
-									width: 60,
-									height: 60,
-								}}
-								onPress={() => {
-									setChain(chain);
-								}}
-							>
-								<Image
-									source={{
-										uri: chain.icon,
-									}}
+					{chains &&
+						chains.length > 0 &&
+						chains
+							.filter((c: any) => c.chainId !== chain?.chainId)
+							.map((chain: any) => (
+								<TouchableOpacity
 									style={{
-										width: 32,
-										height: 32,
+										...style.circle,
+										marginHorizontal: 22,
+										width: 60,
+										height: 60,
 									}}
-								/>
-							</TouchableOpacity>
-						))}
+									onPress={() => {
+										setChain(chain);
+									}}
+								>
+									<Image
+										source={{
+											uri: chain.icon,
+										}}
+										style={{
+											width: 32,
+											height: 32,
+										}}
+									/>
+								</TouchableOpacity>
+							))}
 				</ScrollView>
 			</View>
 			<View style={{ ...style.bottom, justifyContent: "center" }}>

@@ -46,14 +46,14 @@ export interface WalletId {
 
 export interface UserConfig {
 	fromAddress: string;
-	fromChain: number;
+	fromChain: string;
 	fromId: string;
 	fromToken: string;
 }
 
 export interface Request {
 	toId: string;
-	chain: number;
+	chain: string;
 	token: string;
 	amount: string;
 	message: string;
@@ -111,13 +111,14 @@ export const useId = () => {
 		signedMsg?: string;
 	}) => {
 		try {
+			console.log(id, "Dswwwa");
 			const res = await axios({
 				method: "POST",
 				url: BASE_URL,
 				data: {
 					query: `
-					query GetUserData($data: IdDataInput) {
-						walletId(data: $data) {
+					query GetUserData($data: WalletIdWhereInput!) {
+						walletIdsTestnet(where:$data) {
 							id
 							provider {
 								id
@@ -149,16 +150,19 @@ export const useId = () => {
 					}
 					`,
 					variables: {
-						id,
+						data: {
+							id,
+						},
 					},
 				},
 			});
 
 			const data = await res.data;
+			console.log(data.data.walletIdsTestnet, "das");
 
-			return data.data.generateMessage;
+			return data.data.walletIdsTestnet[0];
 		} catch (e) {
-			console.log(e);
+			console.log(JSON.stringify(e));
 			throw e;
 		}
 	};
@@ -208,7 +212,7 @@ export const useId = () => {
 			return data.data.generateMessage;
 		} catch (e) {
 			console.log(e);
-			throw e;
+			return undefined;
 		}
 	};
 
@@ -306,6 +310,7 @@ export const useId = () => {
 
 	const createPaymentRequest = async (request: Request) => {
 		try {
+			console.log(request, "1");
 			const res = await axios({
 				method: "POST",
 				url: BASE_URL,
@@ -322,6 +327,7 @@ export const useId = () => {
 					},
 				},
 			});
+			console.log("@");
 
 			const data = await res.data;
 			console.log(data, "Das");
@@ -330,6 +336,7 @@ export const useId = () => {
 
 			return result;
 		} catch (e) {
+			console.log(e);
 			console.log(JSON.stringify(e));
 			throw e;
 		}
@@ -390,6 +397,7 @@ export const useId = () => {
 
 	return {
 		id,
+		getId,
 		generateMessage,
 		createId,
 		getPaymentRequest,
