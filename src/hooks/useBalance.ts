@@ -7,6 +7,30 @@ const API_KEY = "FEX8KK9SREHZTD874Z8T82CU77NYP5I5H9";
 export const useBalance = () => {
 	const { id } = useAppContext();
 
+	const getAddressNativeBalance = async (address: string, chain: string) => {
+		const URL = `https://deep-index.moralis.io/api/v2/${address}/balance`;
+
+		const params = {
+			chain: ethers.utils.hexStripZeros(
+				BigNumber.from(chain).toHexString()
+			),
+		};
+		console.log(params);
+
+		const res = await axios.get(URL, {
+			params: params,
+			headers: {
+				"x-api-key":
+					"2sGps1ah6lIVQogNYcu46kcX7pcDVR4sSTkpHjKwGG04HrBq67b7i3LsZTRyXFhF",
+			},
+		});
+
+		const data = await res.data;
+		console.log(data, "Das");
+
+		return data.balance;
+	};
+
 	const getNativeBalance = async (chain: string) => {
 		try {
 			const addresses: string[] = [
@@ -45,7 +69,35 @@ export const useBalance = () => {
 		}
 	};
 
-	const getERC20Balance = async (address: string, chain: string) => {
+	const getAddressERC20Balance = async (address: string, chain: string) => {
+		try {
+			const URL = `https://deep-index.moralis.io/api/v2/${address}/erc20`;
+
+			const params = {
+				chain: ethers.utils.hexStripZeros(
+					BigNumber.from(chain).toHexString()
+				),
+			};
+			console.log(params);
+
+			const res = await axios.get(URL, {
+				params: params,
+				headers: {
+					"x-api-key":
+						"2sGps1ah6lIVQogNYcu46kcX7pcDVR4sSTkpHjKwGG04HrBq67b7i3LsZTRyXFhF",
+				},
+			});
+
+			const data = await res.data;
+			console.log(data);
+
+			return data;
+		} catch (e) {
+			throw e;
+		}
+	};
+
+	const getERC20Balance = async (chain: string) => {
 		try {
 			const addresses: string[] = [
 				id?.default.address,
@@ -100,5 +152,7 @@ export const useBalance = () => {
 	return {
 		getNativeBalance,
 		getERC20Balance,
+		getAddressNativeBalance,
+		getAddressERC20Balance,
 	};
 };

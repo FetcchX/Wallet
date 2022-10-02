@@ -8,25 +8,57 @@ import {
 } from "react-native";
 import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { ethers } from "ethers";
-import { getChain, getChains, getTokens } from "fetcch-chain-data";
+import { getChain, getChains, getToken, getTokens } from "fetcch-chain-data";
 import { ScrollView } from "react-native-gesture-handler";
 import { useId } from "../hooks/useId";
 import { useAppContext } from "../context";
+import { useBalance } from "../hooks/useBalance";
 
 export const Send = ({ navigation }: any) => {
+	const { getAddressERC20Balance, getAddressNativeBalance } = useBalance();
 	const { id } = useId();
 	const { evmWallets } = useAppContext();
 
-	const [chain, setChain] = useState(getChain({ internalId: Number(2) }));
+	const [chain, setChain] = useState(getChain({ internalId: Number(12) }));
 	console.log(id?.default.chain, "DSa");
-	const [token, setToken] = useState(getTokens);
+	const [token, setToken] = useState(getTokens(chain?.internalId)[0]);
+	const [tokens, setTokens] = useState<any[]>([]);
 	const [toId, setToId] = useState("");
 	const [amount, setAmount] = useState("");
+	const [account, setAccount] = useState(evmWallets[0]);
 	const [message, setMessage] = useState("");
+
+	useEffect(() => {
+		(async () => {
+			if (chain) {
+				const nativeCurrency = chain.nativeCurrency;
+				const nativeBalance = await getAddressNativeBalance(
+					account.address as string,
+					chain.chainId.toString()
+				);
+
+				const erc20Balances = await getAddressERC20Balance(
+					account.address as string,
+					chain.chainId.toString()
+				);
+
+				const native = [
+					{
+						...nativeCurrency,
+						balance: nativeBalance,
+					},
+					...erc20Balances,
+				];
+
+				// console.log(native, erc20Balances, "dsadsa");
+				setTokens(native);
+			}
+		})();
+	}, [chain]);
 
 	const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -47,6 +79,56 @@ export const Send = ({ navigation }: any) => {
 		(
 			bottomSheetRef as React.MutableRefObject<BottomSheet>
 		).current.expand();
+	};
+
+	useEffect(() => {
+		if (tokens.length > 0) setToken(tokens[0]);
+	}, [tokens]);
+
+	const { buildTransaction, createPaymentRequest, findAddress } = useId();
+
+	const pay = async () => {
+		const address = await findAddress(toId);
+
+		const paymentRequest = await createPaymentRequest({
+			toId: toId,
+			chain: 7,
+			amount: ethers.utils.parseUnits(amount, token.decimals).toString(),
+			message: "Payment",
+			label: "#01",
+			token: token.address
+				? token.address
+				: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+		});
+
+		console.log(paymentRequest);
+
+		const tx = await buildTransaction(paymentRequest.id, {
+			fromAddress: evmWallets[0].address,
+			fromId: id?.id as string,
+			fromToken: token.address
+				? token.address
+				: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+			fromChain: (chain?.internalId === 12
+				? 7
+				: chain?.internalId) as number,
+		});
+
+		let wallet = new ethers.Wallet(account.privateKey);
+		wallet = wallet.connect(
+			ethers.getDefaultProvider(
+				"https://polygon-mumbai.g.alchemy.com/v2/Tv9MYE2mD4zn3ziBLd6S94HvLLjTocju"
+			)
+		);
+		const sentTx = await wallet.sendTransaction(tx.transactionData);
+		await sentTx.wait();
+		navigation.navigate("success", {
+			chainId: chain?.internalId,
+			tx: sentTx.hash,
+			amount: ethers.utils.parseUnits(amount, token.decimals).toString(),
+			toId: toId,
+			token: token,
+		});
 	};
 
 	return (
@@ -73,10 +155,11 @@ export const Send = ({ navigation }: any) => {
 					placeholder="satyam@wagpay"
 					style={{
 						color: "black",
-						paddingVertical: 16,
+						paddingBottom: 8,
 						fontSize: 16,
 						width: "100%",
 						textAlign: "center",
+						fontFamily: "KronaOne_400Regular",
 					}}
 				/>
 				<Text
@@ -95,7 +178,17 @@ export const Send = ({ navigation }: any) => {
 					placeholder="amount"
 					style={{
 						marginTop: 5,
-						color: "black",
+						color:
+							token &&
+							token.balance &&
+							Number(
+								ethers.utils.formatUnits(
+									token.balance,
+									token.decimals
+								)
+							) < Number(amount)
+								? "red"
+								: "black",
 						fontSize: 16,
 						width: "70%",
 						textAlign: "center",
@@ -202,7 +295,13 @@ export const Send = ({ navigation }: any) => {
 										fontFamily: "KronaOne_400Regular",
 									}}
 								>
-									{20} USC
+									{token &&
+										token.balance &&
+										ethers.utils.formatUnits(
+											token.balance,
+											token.decimals
+										)}{" "}
+									{token.name}
 								</Text>
 							</View>
 						</View>
@@ -246,7 +345,7 @@ export const Send = ({ navigation }: any) => {
 										fontFamily: "KronaOne_400Regular",
 									}}
 								>
-									Account 1
+									{account.address.substring(0, 10)}...
 								</Text>
 							</View>
 						</View>
@@ -254,7 +353,7 @@ export const Send = ({ navigation }: any) => {
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => {
-							navigation.navigate("success");
+							pay();
 						}}
 						style={{ ...style.button, padding: 16, marginTop: 20 }}
 					>
@@ -306,7 +405,7 @@ export const Send = ({ navigation }: any) => {
 									fontFamily: "KronaOne_400Regular",
 								}}
 							>
-								{wallet.address}
+								{wallet.address.substring(0, 20)}...
 							</Text>
 						</TouchableOpacity>
 					))}
@@ -327,21 +426,22 @@ export const Send = ({ navigation }: any) => {
 					}}
 					showsVerticalScrollIndicator={false}
 				>
-					{getTokens(chain?.internalId).map((token: any) => (
-						<TouchableOpacity
-							style={{
-								width: "100%",
-								display: "flex",
-								flexDirection: "row",
-								justifyContent: "flex-start",
-								alignItems: "center",
-								marginBottom: 10,
-							}}
-							onPress={() => {
-								setToken(token);
-							}}
-						>
-							<Image
+					{tokens &&
+						tokens.map((token: any) => (
+							<TouchableOpacity
+								style={{
+									width: "100%",
+									display: "flex",
+									flexDirection: "row",
+									justifyContent: "flex-start",
+									alignItems: "center",
+									marginBottom: 10,
+								}}
+								onPress={() => {
+									setToken(token);
+								}}
+							>
+								{/* <Image
 								source={{
 									uri: token.logoURI,
 								}}
@@ -349,18 +449,43 @@ export const Send = ({ navigation }: any) => {
 									width: 32,
 									height: 32,
 								}}
-							/>
-							<Text
-								style={{
-									marginLeft: 20,
-									fontSize: 14,
-									fontFamily: "KronaOne_400Regular",
-								}}
-							>
-								{token.name}
-							</Text>
-						</TouchableOpacity>
-					))}
+							/> */}
+								<TouchableOpacity
+									style={{
+										width: "100%",
+										display: "flex",
+										flexDirection: "column",
+										justifyContent: "flex-start",
+										alignItems: "flex-start",
+									}}
+									onPress={() => {
+										setToken(token);
+									}}
+								>
+									<Text
+										style={{
+											marginLeft: 20,
+											fontSize: 18,
+											fontFamily: "KronaOne_400Regular",
+										}}
+									>
+										{token.name}
+									</Text>
+									<Text
+										style={{
+											marginLeft: 20,
+											fontSize: 14,
+											fontFamily: "KronaOne_400Regular",
+										}}
+									>
+										{ethers.utils.formatUnits(
+											token.balance,
+											token.decimals
+										)}
+									</Text>
+								</TouchableOpacity>
+							</TouchableOpacity>
+						))}
 				</ScrollView>
 			</BottomSheet>
 		</View>

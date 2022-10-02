@@ -74,16 +74,17 @@ export const CreateAccount = ({ navigation }: any) => {
 		).current.expand();
 	};
 
-	useEffect(() => {
-		try {
-			if (seedPhrase) {
-				generateEvmWallet();
-				// navigation.navigate("home");
-			}
-		} catch (e) {
-			setLoading(false);
-		}
-	}, [seedPhrase]);
+	// useEffect(() => {
+	// 	try {
+	// 		if (seedPhrase) {
+	// 			generateEvmWallet();
+	// 			// navigation.navigate("home");
+	// 		}
+	// 	} catch (e) {
+	// 		console.log(JSON.stringify(e), "3");
+	// 		setLoading(false);
+	// 	}
+	// }, [seedPhrase]);
 
 	useEffect(() => {
 		(async () => {
@@ -93,42 +94,42 @@ export const CreateAccount = ({ navigation }: any) => {
 					selectedChains.length > 0 &&
 					username.length > 3
 				) {
-					if (
-						selectedChains.find((chain) =>
-							chain.name.includes("Solana")
-						)
-					) {
-					} else {
-						const defaultAddress = {
-							address: evmWallets[0].address,
-							chain: selectedChains[0].internalId,
+					console.log("22");
+					const defaultAddress = {
+						address: evmWallets[0].address,
+						chain:
+							selectedChains[0].internalId == 12
+								? 8
+								: selectedChains[0].internalId,
+					};
+					console.log(defaultAddress);
+
+					const wallets = evmWallets.slice(1);
+					console.log(wallets);
+					const otherAddresses = wallets.map((wallet) => {
+						return {
+							address: wallet.address,
+							chain: selectedChains.map((ch) =>
+								ch.internalId == 12 ? 8 : ch.internalId
+							),
 						};
+					});
+					console.log(otherAddresses);
 
-						const wallets = evmWallets.slice(1);
+					const id = await createId({
+						default: defaultAddress,
+						others: otherAddresses,
+						id: `${username}@fetcch.testnet`,
+						provider: "fetcch.testnet",
+						identifier: username,
+					});
 
-						const otherAddresses = wallets.map((wallet) => {
-							return {
-								address: wallet.address,
-								chain: selectedChains.map(
-									(ch) => ch.internalId
-								),
-							};
-						});
+					console.log(id, "id2");
 
-						const id = await createId({
-							default: defaultAddress,
-							others: otherAddresses,
-							id: `${username}@fetcch.testnet`,
-							provider: "fetcch.testnet",
-							identifier: username,
-						});
-
-						console.log(id, "id2");
-
-						navigation.navigate("home");
-					}
+					navigation.navigate("home");
 				}
 			} catch (e) {
+				console.log(e, "@");
 				setLoading(false);
 			}
 		})();
@@ -141,8 +142,9 @@ export const CreateAccount = ({ navigation }: any) => {
 	const createWallet = () => {
 		setLoading(true);
 		try {
-			generateSeedPhrase();
+			generateEvmWallet();
 		} catch (e) {
+			console.log(e);
 			setLoading(false);
 		}
 	};
@@ -155,6 +157,7 @@ export const CreateAccount = ({ navigation }: any) => {
 		useCallback(() => {
 			(async () => {
 				const id = await AsyncStorage.getItem("walletid");
+				console.log(id, "das");
 				if (!id) return;
 				setId(JSON.parse(id as string));
 				navigation.navigate("home");
@@ -307,7 +310,7 @@ export const CreateAccount = ({ navigation }: any) => {
 							style={style.next}
 						>
 							{loading ? (
-								<ActivityIndicator size={20} color="white" />
+								<ActivityIndicator size={20} color="black" />
 							) : (
 								<Text
 									style={{

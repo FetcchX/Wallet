@@ -25,10 +25,9 @@ export const HomeTop = ({ navigation }: Props) => {
 			}
 		);
 
-		getERC20Balance(
-			id?.default.address as string,
-			id?.default.chain.chainId as string
-		).then((balance) => setERC20(balance));
+		getERC20Balance(id?.default.chain.chainId as string).then((balance) =>
+			setERC20(balance)
+		);
 	}, []);
 
 	return (

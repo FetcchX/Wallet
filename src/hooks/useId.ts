@@ -44,12 +44,64 @@ export interface WalletId {
 	previousSignature: string;
 }
 
+export interface UserConfig {
+	fromAddress: string;
+	fromChain: number;
+	fromId: string;
+	fromToken: string;
+}
+
+export interface Request {
+	toId: string;
+	chain: number;
+	token: string;
+	amount: string;
+	message: string;
+	label: string;
+}
+
 const BASE_URL = `http://${manifest?.debuggerHost
 	?.split(":")
-	.shift()}:4000/graphql/`;
+	.shift()}:5000/graphql/`;
 
 export const useId = () => {
 	const { id, setId } = useAppContext();
+
+	const findAddress = async (id: string, chain?: number) => {
+		try {
+			const res = await axios({
+				method: "POST",
+				url: BASE_URL,
+				data: {
+					query: `
+					query FindAddress($data: FindAddressInput!) {
+						findAddress(data: $data) {
+							address
+							chain {
+								name
+								id
+								chainId
+							}
+						}
+					}
+					`,
+					variables: {
+						data: {
+							id: id,
+							fallbackToDefault: true,
+						},
+					},
+				},
+			});
+
+			const data = await res.data;
+
+			return data.data.findAddress;
+		} catch (e) {
+			console.log(e);
+			throw e;
+		}
+	};
 
 	const getId = async ({
 		id,
@@ -252,10 +304,97 @@ export const useId = () => {
 		}
 	};
 
+	const createPaymentRequest = async (request: Request) => {
+		try {
+			const res = await axios({
+				method: "POST",
+				url: BASE_URL,
+				data: {
+					query: `
+					mutation PaymentRequest($request: RequestCreateInput!) {
+						paymentRequests(request: $request) {
+							id
+						}
+					}
+					`,
+					variables: {
+						request: request,
+					},
+				},
+			});
+
+			const data = await res.data;
+			console.log(data, "Das");
+
+			const result = data.data.paymentRequests;
+
+			return result;
+		} catch (e) {
+			console.log(JSON.stringify(e));
+			throw e;
+		}
+	};
+
+	const buildTransaction = async (
+		paymentRequestId: string,
+		userConfig: UserConfig
+	) => {
+		console.log({
+			paymentRequestId: paymentRequestId,
+			userConfig: userConfig,
+		});
+		try {
+			const res = await axios({
+				method: "POST",
+				url: BASE_URL,
+				data: {
+					query: `
+					query BuildTransaction($data: BuildTransactionInput) {
+						buildTransaction(data: $data) {
+							paymentRequestId {
+								id
+							}
+							transactionData
+							userConfig {
+								fromId {
+									id
+								}
+								fromChain {
+									id
+								}
+								fromAddress
+								fromToken
+							}
+						}
+					}
+					`,
+					variables: {
+						data: {
+							paymentRequestId: paymentRequestId,
+							userConfig: userConfig,
+						},
+					},
+				},
+			});
+
+			const data = await res.data;
+
+			const result = data.data.buildTransaction;
+
+			return result;
+		} catch (e) {
+			console.log(JSON.stringify(e));
+			throw e;
+		}
+	};
+
 	return {
 		id,
 		generateMessage,
 		createId,
 		getPaymentRequest,
+		buildTransaction,
+		createPaymentRequest,
+		findAddress,
 	};
 };

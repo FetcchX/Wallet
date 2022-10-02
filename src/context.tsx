@@ -111,26 +111,26 @@ export const AppContextProvider = ({ children }: Props) => {
 	}, []);
 
 	useEffect(() => {
-		if (evmWallets.length <= 0) return;
+		if (evmWallets && evmWallets.length <= 0) return;
 		AsyncStorage.setItem("evmwallets", JSON.stringify(evmWallets));
 	}, [evmWallets]);
 
 	useEffect(() => {
 		(async () => {
 			const a: any = await AsyncStorage.getItem("evmwallets");
-			setId(JSON.parse(a));
+			setEvmWallets(JSON.parse(a));
 		})();
 	}, []);
 
 	useEffect(() => {
-		if (evmWallets.length <= 0) return;
+		if (seedPhrase) return;
 		AsyncStorage.setItem("seedphrase", seedPhrase);
 	}, [seedPhrase]);
 
 	useEffect(() => {
 		(async () => {
 			const a: any = await AsyncStorage.getItem("seedphrase");
-			setId(JSON.parse(a));
+			setSeedPhrase(JSON.parse(a));
 		})();
 	}, []);
 
@@ -142,6 +142,8 @@ export const AppContextProvider = ({ children }: Props) => {
 	useEffect(() => {
 		(async () => {
 			// AsyncStorage.removeItem("walletid");
+			// AsyncStorage.removeItem("seedphrase");
+			// AsyncStorage.removeItem("evmwallets");
 			console.log(await AsyncStorage.getItem("walletid"), "dsa");
 		})();
 	});

@@ -7,13 +7,27 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { ethers } from "ethers";
 import { getChain, getChains, getTokens } from "fetcch-chain-data";
 import { ScrollView } from "react-native-gesture-handler";
+import { useId } from "../hooks/useId";
+import { useAppContext } from "../context";
 
 export const PyaonRequest = ({ navigation, route }: any) => {
+	const { buildTransaction } = useId();
+	const { id, evmWallets } = useAppContext();
+
 	const [request, setRequest] = useState(route.params.request);
 	const [token, setToken] = useState(route.params.request.token);
 	const [chain, setChain] = useState(
 		getChain({ internalId: route.params.request.chain })
 	);
+
+	const pay = async () => {
+		const tx = await buildTransaction(request.id, {
+			fromAddress: evmWallets[0].address,
+			fromId: id?.id as string,
+			fromToken: token.address,
+			fromChain: chain?.internalId.toString() as string,
+		});
+	};
 
 	const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -220,7 +234,7 @@ export const PyaonRequest = ({ navigation, route }: any) => {
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => {
-							navigation.navigate("success");
+							pay();
 						}}
 						style={{ ...style.button, padding: 16, marginTop: 20 }}
 					>

@@ -24,23 +24,37 @@ export const useWallet = () => {
 	};
 
 	const generateEvmWallet = () => {
-		if (!seedPhrase) throw "Seed phrase doesn't exist";
+		console.log("232323");
+		// const wallet = ethers.Wallet.fromMnemonic(
+		// 	seedPhrase,
+		// 	`m/44'/60'/0'/0/${evmWallets.length}`
+		// );
 
-		const wallet = ethers.Wallet.fromMnemonic(
-			seedPhrase,
-			`m/44'/60'/0'/0/${evmWallets.length}`
-		);
+		const wallet = ethers.Wallet.createRandom();
+		console.log("23434");
+		setSeedPhrase(wallet.mnemonic.phrase);
+		console.log("234");
+		if (evmWallets && evmWallets.length > 0) {
+			console.log("1233");
+			setEvmWallets((value) => {
+				let shallowCopy = [...value];
 
-		setEvmWallets((value) => {
-			let shallowCopy = [...value];
+				shallowCopy.push({
+					address: wallet.address,
+					privateKey: wallet.privateKey,
+				});
 
-			shallowCopy.push({
-				address: wallet.address,
-				privateKey: wallet.privateKey,
+				return shallowCopy;
 			});
-
-			return shallowCopy;
-		});
+		} else {
+			console.log("1222");
+			setEvmWallets([
+				{
+					address: wallet.address,
+					privateKey: wallet.privateKey,
+				},
+			]);
+		}
 
 		console.log(wallet);
 	};
