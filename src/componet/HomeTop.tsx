@@ -91,7 +91,7 @@ export const HomeTop = ({ navigation }: Props) => {
 									fontFamily: "KronaOne_400Regular",
 								}}
 							>
-								$ {balance.toFixed(3)}
+								M$ {balance.toFixed(3)}
 							</Text>
 
 							<View
@@ -151,7 +151,7 @@ export const HomeTop = ({ navigation }: Props) => {
 					</ImageBackground>
 				</View>
 			</View>
-			{/* <SpacialRequest navigation={navigation} /> */}
+			<SpacialRequest navigation={navigation} />
 			<Assets assets={erc20} />
 		</View>
 	);

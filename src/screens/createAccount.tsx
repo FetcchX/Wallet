@@ -173,6 +173,7 @@ export const CreateAccount = ({ navigation }: any) => {
 		useCallback(() => {
 			(async () => {
 				const a: any = await AsyncStorage.getItem("walletid");
+				console.log(JSON.parse(a), "ew");
 				const id = await getId({
 					id: JSON.parse(a).id,
 				});

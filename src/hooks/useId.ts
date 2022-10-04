@@ -75,7 +75,7 @@ export const useId = () => {
 				data: {
 					query: `
 					query FindAddress($data: FindAddressInput!) {
-						findAddress(data: $data) {
+						findAddressTestnet(data: $data) {
 							address
 							chain {
 								name
@@ -96,7 +96,7 @@ export const useId = () => {
 
 			const data = await res.data;
 
-			return data.data.findAddress;
+			return data.data.findAddressTestnet;
 		} catch (e) {
 			console.log(e);
 			throw e;
@@ -277,7 +277,7 @@ export const useId = () => {
 				data: {
 					query: `
 					query {
-						requests(where: { toId: { id: "${id?.id}" } }) {
+						requestsTestnet(where: { fromId: { id: "${id?.id}" } }) {
 							id
 							toId {
 								id
@@ -299,7 +299,7 @@ export const useId = () => {
 
 			const data = await res.data;
 
-			const result = data.data.requests;
+			const result = data.data.requestsTestnet;
 
 			return result;
 		} catch (e) {
@@ -317,7 +317,7 @@ export const useId = () => {
 				data: {
 					query: `
 					mutation PaymentRequest($request: RequestCreateInput!) {
-						paymentRequests(request: $request) {
+						paymentRequestsTestnet(request: $request) {
 							id
 						}
 					}
@@ -332,7 +332,7 @@ export const useId = () => {
 			const data = await res.data;
 			console.log(data, "Das");
 
-			const result = data.data.paymentRequests;
+			const result = data.data.paymentRequestsTestnet;
 
 			return result;
 		} catch (e) {
@@ -357,7 +357,7 @@ export const useId = () => {
 				data: {
 					query: `
 					query BuildTransaction($data: BuildTransactionInput) {
-						buildTransaction(data: $data) {
+						buildTransactionTestnet(data: $data) {
 							paymentRequestId {
 								id
 							}
@@ -386,7 +386,7 @@ export const useId = () => {
 
 			const data = await res.data;
 
-			const result = data.data.buildTransaction;
+			const result = data.data.buildTransactionTestnet;
 
 			return result;
 		} catch (e) {
