@@ -24,6 +24,7 @@ import { Send } from "./src/screens/send";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { Transections } from "./src/screens/Transections";
 
 const Tab = createBottomTabNavigator();
 
@@ -103,6 +104,8 @@ export default function App() {
               initialRouteName={"home"}
             >
               <Stack.Screen name="TabNavigation" component={TabNavigation} />
+
+              <Stack.Screen name="Txs" component={Transections} />
               <Stack.Screen name="createAccount" component={CreateAccount} />
               <Stack.Screen name="home" component={Main} />
               <Stack.Screen name="requests" component={Requests} />

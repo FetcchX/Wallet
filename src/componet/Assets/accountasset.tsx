@@ -14,6 +14,7 @@ export const AccountAsset = ({
       style={{
         width: "100%",
         backgroundColor: "#EAFDE0",
+        marginVertical: 8,
       }}
     >
       <View style={AssetStyle.container}>

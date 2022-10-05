@@ -48,6 +48,15 @@ export const Main = ({ navigation }: any) => {
           <HomeTop handlre={handleSHowAssets} navigation={navigation} />
         </View>
         <BottomSheet
+          style={{
+            backgroundColor: COLORS.primary,
+          }}
+          handleStyle={{
+            backgroundColor: COLORS.primary,
+          }}
+          handleIndicatorStyle={{
+            backgroundColor: "white",
+          }}
           enablePanDownToClose={true}
           ref={bottomSheetRef}
           index={num}
