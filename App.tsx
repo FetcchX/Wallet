@@ -21,55 +21,98 @@ import AppLoading from "expo-app-loading";
 import { useFonts, KronaOne_400Regular } from "@expo-google-fonts/krona-one";
 import { AppContextProvider } from "./src/context";
 import { Send } from "./src/screens/send";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+
+const Tab = createBottomTabNavigator();
+
 const Stack = createNativeStackNavigator();
 
+export function TabNavigation() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: "#000",
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Main}
+        options={{
+          headerShown: false,
+          tabBarIcon: () => (
+            <MaterialIcons name="home" color={"#fff"} size={25} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="requests"
+        component={Requests}
+        options={{
+          headerShown: false,
+          tabBarIcon: () => (
+            <AntDesign
+              name="swap"
+              color={"#fff"}
+              size={20}
+              style={{ transform: [{ rotate: "90deg" }] }}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="createAccount"
+        component={CreateAccount}
+        options={{
+          headerShown: false,
+          tabBarIcon: () => (
+            <MaterialIcons name="account-circle" color={"#fff"} size={20} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
 export default function App() {
-	let [fontsLoaded] = useFonts({
-		KronaOne_400Regular,
-	});
+  let [fontsLoaded] = useFonts({
+    KronaOne_400Regular,
+  });
 
-	let fontSize = 24;
-	let paddingVertical = 6;
+  let fontSize = 24;
+  let paddingVertical = 6;
 
-	if (!fontsLoaded) {
-		return <AppLoading />;
-	}
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
 
-	return (
-		<>
-			<GestureHandlerRootView
-				style={{
-					flex: 1,
-				}}
-			>
-				<AppContextProvider>
-					<NavigationContainer>
-						<Stack.Navigator
-							screenOptions={{ headerShown: false }}
-							initialRouteName={"createAccount"}
-						>
-							<Stack.Screen
-								name="createAccount"
-								component={CreateAccount}
-							/>
-							<Stack.Screen name="home" component={Main} />
-							<Stack.Screen
-								name="requests"
-								component={Requests}
-							/>
-							<Stack.Screen
-								name="success"
-								component={Succesfull}
-							/>
-							<Stack.Screen
-								name="payOnRequest"
-								component={PyaonRequest}
-							/>
-							<Stack.Screen name="send" component={Send} />
-						</Stack.Navigator>
-					</NavigationContainer>
-				</AppContextProvider>
-			</GestureHandlerRootView>
-		</>
-	);
+  return (
+    <>
+      <GestureHandlerRootView
+        style={{
+          flex: 1,
+        }}
+      >
+        <AppContextProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{ headerShown: false }}
+              initialRouteName={"home"}
+            >
+              <Stack.Screen name="TabNavigation" component={TabNavigation} />
+              <Stack.Screen name="createAccount" component={CreateAccount} />
+              <Stack.Screen name="home" component={Main} />
+              <Stack.Screen name="requests" component={Requests} />
+              <Stack.Screen name="success" component={Succesfull} />
+              <Stack.Screen name="payOnRequest" component={PyaonRequest} />
+              <Stack.Screen name="send" component={Send} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AppContextProvider>
+      </GestureHandlerRootView>
+    </>
+  );
 }

@@ -10,7 +10,7 @@ export const Assets = ({ assets }: { assets: any[] }) => {
         style={{
           height: 500,
           width: "100%",
-          marginVertical: SIZES.extralarge,
+          marginBottom: 16,
         }}
       >
         <Text
@@ -18,9 +18,13 @@ export const Assets = ({ assets }: { assets: any[] }) => {
             fontSize: 22,
             fontFamily: "KronaOne_400Regular",
           }}
-        >
-          {assets.length} Assets
-        </Text>
+        ></Text>
+        <Asset name="USDC" balance="123" />
+
+        <Asset name="USDC" balance="123" />
+        <Asset name="USDC" balance="123" />
+        <Asset name="USDC" balance="123" />
+
         {assets.map((asset) => (
           <Asset
             name={asset.symbol}
