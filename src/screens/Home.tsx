@@ -1,4 +1,5 @@
 import BottomSheet from "@gorhom/bottom-sheet";
+import { getToken } from "fetcch-chain-data";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
   ImageBackground,
@@ -7,6 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { AccountAsset } from "../componet/Assets/accountasset";
+import { Asset } from "../componet/Assets/Asset";
 import { HomeTop } from "../componet/HomeTop";
 import { Header } from "../componet/shared/header";
 import { Safe } from "../componet/shared/safe";
@@ -18,6 +21,7 @@ export const Main = ({ navigation }: any) => {
 
   const [num, setNum] = useState(-1);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const TokensSheetRef = useRef<BottomSheet>(null);
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%"], []);
@@ -31,12 +35,17 @@ export const Main = ({ navigation }: any) => {
     (bottomSheetRef as React.MutableRefObject<BottomSheet>).current.expand();
   };
 
+  const handleSHowAssets = () => {
+    if (!TokensSheetRef) return;
+    (TokensSheetRef as React.MutableRefObject<BottomSheet>).current.expand();
+  };
+
   return (
     <ScrollView>
       <Safe>
         <Header handleTokenOpenPress={handleTokenOpenPress} />
         <View>
-          <HomeTop navigation={navigation} />
+          <HomeTop handlre={handleSHowAssets} navigation={navigation} />
         </View>
         <BottomSheet
           enablePanDownToClose={true}
@@ -80,6 +89,38 @@ export const Main = ({ navigation }: any) => {
                   </Text>
                 </TouchableOpacity>
               ))}
+          </ScrollView>
+        </BottomSheet>
+        <BottomSheet
+          style={{
+            backgroundColor: COLORS.primary,
+          }}
+          handleStyle={{
+            backgroundColor: COLORS.primary,
+          }}
+          handleIndicatorStyle={{
+            backgroundColor: "white",
+          }}
+          enablePanDownToClose={true}
+          ref={TokensSheetRef}
+          index={-1}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              padding: 10,
+              backgroundColor: COLORS.primary,
+              height: "100%",
+            }}
+            showsVerticalScrollIndicator={false}
+          >
+            <AccountAsset name="something" balance="something" />
+            <AccountAsset name="something" balance="something" />
+            <AccountAsset name="something" balance="something" />
+            <AccountAsset name="something" balance="something" />
+            <AccountAsset name="something" balance="something" />
+            <AccountAsset name="something" balance="something" />
           </ScrollView>
         </BottomSheet>
       </Safe>

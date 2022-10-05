@@ -17,9 +17,10 @@ import { NFTs } from "./NFTs";
 
 interface Props {
   navigation: any;
+  handlre: any;
 }
 
-export const HomeTop = ({ navigation }: Props) => {
+export const HomeTop = ({ navigation, handlre }: Props) => {
   const { id, account } = useAppContext();
   const { getNativeBalance, getERC20Balance } = useBalance();
   const [balance, setBalance] = useState(0);
@@ -198,7 +199,11 @@ export const HomeTop = ({ navigation }: Props) => {
           </Text>
         </TouchableOpacity>
       </View>
-      {currentTab == "assets" ? <Assets assets={erc20} /> : <NFTs />}
+      {currentTab == "assets" ? (
+        <Assets handlre={handlre} assets={erc20} />
+      ) : (
+        <NFTs />
+      )}
     </View>
   );
 };

@@ -1,9 +1,16 @@
 import { ethers } from "ethers";
 import { Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { SIZES } from "../../styles/styles";
 import { Asset } from "./Asset";
 
-export const Assets = ({ assets }: { assets: any[] }) => {
+export const Assets = ({
+  assets,
+  handlre,
+}: {
+  assets: any[];
+  handlre: any;
+}) => {
   return (
     <>
       <View
@@ -19,11 +26,18 @@ export const Assets = ({ assets }: { assets: any[] }) => {
             fontFamily: "KronaOne_400Regular",
           }}
         ></Text>
-        <Asset name="USDC" balance="123" />
-
-        <Asset name="USDC" balance="123" />
-        <Asset name="USDC" balance="123" />
-        <Asset name="USDC" balance="123" />
+        <TouchableOpacity onPress={handlre}>
+          <Asset name="USDC" balance="123" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlre}>
+          <Asset name="USDC" balance="123" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlre}>
+          <Asset name="USDC" balance="123" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlre}>
+          <Asset name="USDC" balance="123" />
+        </TouchableOpacity>
 
         {assets.map((asset) => (
           <Asset
