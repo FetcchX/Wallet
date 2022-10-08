@@ -9,6 +9,7 @@ export const NFTs = () => {
           justifyContent: "center",
           flexDirection: "row",
           flexWrap: "wrap",
+          marginTop: 20,
         }}
       >
         <NFT />

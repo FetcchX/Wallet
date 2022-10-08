@@ -26,6 +26,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Transections } from "./src/screens/Transections";
 import { Profile } from "./src/screens/Profile";
+import { COLORS } from "./src/styles/styles";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,14 +35,16 @@ const Stack = createNativeStackNavigator();
 export function TabNavigation() {
   return (
     <Tab.Navigator
+      initialRouteName="home"
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "#000",
+          backgroundColor: COLORS.primary,
+          padding: 12,
         },
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="home"
         component={Main}
         options={{
           headerShown: false,
@@ -51,8 +54,8 @@ export function TabNavigation() {
         }}
       />
       <Tab.Screen
-        name="requests"
-        component={Requests}
+        name="Txs"
+        component={Transections}
         options={{
           headerShown: false,
           tabBarIcon: () => (
@@ -66,8 +69,8 @@ export function TabNavigation() {
         }}
       />
       <Tab.Screen
-        name="createAccount"
-        component={CreateAccount}
+        name="Pfp"
+        component={Profile}
         options={{
           headerShown: false,
           tabBarIcon: () => (
@@ -102,7 +105,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator
               screenOptions={{ headerShown: false }}
-              initialRouteName={"Pfp"}
+              initialRouteName={"TabNavigation"}
             >
               <Stack.Screen name="TabNavigation" component={TabNavigation} />
               <Stack.Screen name="Txs" component={Transections} />

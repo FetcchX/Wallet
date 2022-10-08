@@ -27,22 +27,22 @@ export const HomeTop = ({ navigation, handlre }: Props) => {
   const [erc20, setERC20] = useState<any[]>([]);
   const [currentTab, setCurrentTab] = useState("assets");
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log(id, "Dsadasdrwhroughddhbfbcbikbj");
-      id &&
-        getNativeBalance(id?.default.chain.chainId as string).then(
-          (balance) => {
-            console.log(balance);
-            setBalance(balance);
-          }
-        );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     console.log(id, "Dsadasdrwhroughddhbfbcbikbj");
+  //     id &&
+  //       getNativeBalance(id?.default.chain.chainId as string).then(
+  //         (balance) => {
+  //           console.log(balance);
+  //           setBalance(balance);
+  //         }
+  //       );
 
-      getERC20Balance(id?.default.chain.chainId as string).then((balance) =>
-        setERC20(balance)
-      );
-    }, [])
-  );
+  //     getERC20Balance(id?.default.chain.chainId as string).then((balance) =>
+  //       setERC20(balance)
+  //     );
+  //   }, [])
+  // );
 
   return (
     <View style={style.constainer}>
