@@ -38,6 +38,8 @@ const getNFT = async (address: string, chain: string) => {
 
 		const data = res.data;
 
+		console.log(data, "dsa");
+
 		return data;
 	} catch (e) {
 		console.log(JSON.stringify(e));
@@ -54,7 +56,7 @@ export const useNFTs = () => {
 
 		const nfts: any[] = [];
 
-		const defaultNFTs: any = getNFT(
+		const defaultNFTs: any = await getNFT(
 			walletId.default.address,
 			walletId.default.chain.id
 		);

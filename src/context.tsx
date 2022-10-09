@@ -54,6 +54,46 @@ interface Wallet {
 	privateKey: string;
 }
 
+interface NFT {
+	contract: {
+		address: string;
+	};
+	id: {
+		tokenId: string;
+		tokenMetadata: {
+			tokenType: string;
+		};
+	};
+	balance?: string;
+	title: string;
+	description: string;
+	tokenUri: {
+		raw: string;
+		gateway: string;
+	};
+	media: {
+		raw: string;
+		gateway: string;
+	}[];
+	metadata: {
+		name: string;
+		description: string;
+		image: string;
+		external_url: string;
+		attributes: {
+			value: string;
+			trait_type: string;
+		}[];
+		timeLastUpdated: Date;
+		contractMetadata: {
+			name: string;
+			symbol: string;
+			totalSupply: string;
+			tokenType: string;
+		};
+	};
+}
+
 interface AppContext {
 	id: WalletId | null;
 	setId: Dispatch<SetStateAction<WalletId | null>>;
@@ -65,6 +105,8 @@ interface AppContext {
 	setSeedPhrase: Dispatch<SetStateAction<string>>;
 	account: Wallet | undefined;
 	setAccount: Dispatch<SetStateAction<Wallet | undefined>>;
+	nfts: NFT[] | undefined;
+	setNFTs: Dispatch<SetStateAction<NFT[] | undefined>>;
 }
 
 const AppContext = createContext<AppContext>({} as AppContext);
@@ -89,6 +131,7 @@ export const AppContextProvider = ({ children }: Props) => {
 	const [solanaWallets, setSolanaWallets] = useState<Wallet[]>([]);
 	const [seedPhrase, setSeedPhrase] = useState("");
 	const [account, setAccount] = useState<Wallet>();
+	const [nfts, setNFTs] = useState<NFT[]>();
 
 	const { getId } = useId();
 
@@ -103,6 +146,8 @@ export const AppContextProvider = ({ children }: Props) => {
 		setSeedPhrase,
 		account,
 		setAccount,
+		nfts,
+		setNFTs,
 	};
 
 	useEffect(() => {

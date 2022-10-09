@@ -19,7 +19,7 @@ import { useNFTs } from "../hooks/useNFT";
 import { COLORS } from "../styles/styles";
 
 export const Main = ({ navigation }: any) => {
-	const { evmWallets, account, setAccount } = useAppContext();
+	const { evmWallets, account, setAccount, setNFTs } = useAppContext();
 
 	const [num, setNum] = useState(-1);
 	const bottomSheetRef = useRef<BottomSheet>(null);
@@ -50,7 +50,7 @@ export const Main = ({ navigation }: any) => {
 
 	useEffect(() => {
 		getIdNFTs("testxx@fetcch.testnet")
-			.then((res) => console.log(res, "resss"))
+			.then((res) => setNFTs(res))
 			.catch((e) => console.error(e, "ererrerer"));
 	}, []);
 
