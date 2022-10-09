@@ -3,10 +3,28 @@ import { useEffect, useState } from "react";
 import Constants from "expo-constants";
 import { AsyncStorage } from "react-native";
 import { getIdData, useAppContext } from "../context";
+import { callApi } from "./shared";
 const { manifest } = Constants;
 
+export interface RequestWhereInput {
+	id?: number;
+	payer?: WalletId;
+	payee?: WalletId;
+	token?: string;
+	chain?: number;
+	amount?: string;
+	message?: string;
+	label?: string;
+	data?: string;
+	executed?: boolean;
+	transactionHash?: string;
+	sameChain?: boolean;
+	fromChain?: number;
+	fromToken?: string;
+	dstTransactionHash?: string;
+}
+
 export interface GenerateMessageWalletId {
-	id: string;
 	identifier: string;
 	provider: string;
 	default: {
@@ -17,6 +35,8 @@ export interface GenerateMessageWalletId {
 		address: string;
 		chain: number[];
 	}[];
+	currentSignature?: string;
+	previousSignature?: string;
 }
 
 export interface Chain {
@@ -26,22 +46,22 @@ export interface Chain {
 }
 
 export interface WalletId {
-	id: string;
-	identifier: string;
-	provider: {
-		id: string;
-		delimiter: string;
+	id?: string;
+	identifier?: string;
+	provider?: {
+		id?: string;
+		delimiter?: string;
 	};
-	default: {
-		address: string;
-		chain: Chain;
+	default?: {
+		address?: string;
+		chain?: Chain;
 	};
-	others: {
-		address: string;
-		chain: Chain[];
+	others?: {
+		address?: string;
+		chain?: Chain[];
 	}[];
-	currentSignature: string;
-	previousSignature: string;
+	currentSignature?: string;
+	previousSignature?: string;
 }
 
 export interface UserConfig {
@@ -52,7 +72,8 @@ export interface UserConfig {
 }
 
 export interface Request {
-	toId: string;
+	payer: string;
+	payee: string;
 	chain: string;
 	token: string;
 	amount: string;
@@ -68,39 +89,25 @@ export const useId = () => {
 	const { id, setId } = useAppContext();
 
 	const findAddress = async (id: string, chain?: number) => {
-		try {
-			const res = await axios({
-				method: "POST",
-				url: BASE_URL,
+		return callApi(
+			"findAddress",
+			`query FindAddress($data: FindAddressInput!) {
+			findAddress(data: $data) {
+				address
+				chain {
+					name
+					id
+					chainId
+				}
+			}
+		}`,
+			{
 				data: {
-					query: `
-					query FindAddress($data: FindAddressInput!) {
-						findAddressTestnet(data: $data) {
-							address
-							chain {
-								name
-								id
-								chainId
-							}
-						}
-					}
-					`,
-					variables: {
-						data: {
-							id: id,
-							fallbackToDefault: true,
-						},
-					},
+					id: id,
+					fallbackToDefault: true,
 				},
-			});
-
-			const data = await res.data;
-
-			return data.data.findAddressTestnet;
-		} catch (e) {
-			console.log(e);
-			throw e;
-		}
+			}
+		);
 	};
 
 	const getId = async ({
@@ -110,166 +117,137 @@ export const useId = () => {
 		id?: string;
 		signedMsg?: string;
 	}) => {
-		try {
-			console.log(id, "Dswwwa");
-			const res = await axios({
-				method: "POST",
-				url: BASE_URL,
-				data: {
-					query: `
-					query GetUserData($data: WalletIdWhereInput!) {
-						walletIdsTestnet(where:$data) {
+		return callApi(
+			"walletId",
+			`query GetUserData($data: WalletIdDataInput!) {
+				walletId(data:$data) {
+					id
+					provider {
+						id
+					}
+					default {
+						address
+						chain {
 							id
-							provider {
-								id
-							}
-							default {
-								address
-								chain {
-									id
-									name
-								  icon
-								  rpc
-								  type
-								  faucets
-								  nativeCurrency { name, symbol, decimals }
-								  shortName
-								  infoURL
-								  chainId
-								  explorers { name, url, standard }
-								}
-							}
-							others {
-								address
-								chain {
-									id
-								}
-							}
-							identifier
+							name
+						  icon
+						  rpc
+						  type
+						  faucets
+						  nativeCurrency { name, symbol, decimals }
+						  shortName
+						  infoURL
+						  chainId
+						  explorers { name, url, standard }
 						}
 					}
-					`,
-					variables: {
-						data: {
-							id,
-						},
-					},
+					others {
+						address
+						chain {
+							id
+						}
+					}
+					identifier
+				}
+			}
+			`,
+			{
+				data: {
+					id,
+					signedMsg,
 				},
-			});
-
-			const data = await res.data;
-			console.log(data.data.walletIdsTestnet, "das");
-
-			return data.data.walletIdsTestnet[0];
-		} catch (e) {
-			console.log(JSON.stringify(e));
-			throw e;
-		}
+			}
+		);
 	};
 
 	const generateMessage = async (id: GenerateMessageWalletId) => {
-		try {
-			const res = await axios({
-				method: "POST",
-				url: BASE_URL,
-				data: {
-					query: `
-					query GenerateMessage($id: WalletIdCreateInput!, $nonce: Int!) {
-						generateMessage(id: $id, nonce: $nonce) {
-							message
-							nonce
-							walletId {
+		return callApi(
+			"generateMessage",
+			`query A($id: WalletIdCreateInput!) {
+				generateMessage(id: $id) {
+					message
+					nonce
+					walletId {
+						id
+						provider {
+							id
+							delimiter
+						}
+						identifier
+						currentSignature
+						previousSignature
+						default {
+							address
+							chain {
 								id
-								default {
-									address
-									chain {
-										id
-										name
-										chainId
-									}
-								}
-								others {
-									address
-									chain {
-										id
-										name
-										chainId
-									}
-								}
+								name
+								chainId
 							}
-							providerSignature
+						}
+						others {
+							address
+							chain {
+								id
+								name
+								chainId
+							}
 						}
 					}
-					`,
-					variables: {
-						id,
-					},
-				},
-			});
-
-			const data = await res.data;
-
-			return data.data.generateMessage;
-		} catch (e) {
-			console.log(e);
-			return undefined;
-		}
+					providerSignature
+				}
+			}`,
+			{
+				id: id,
+			}
+		);
 	};
 
 	const createId = async (id: GenerateMessageWalletId) => {
-		try {
-			console.log(id);
-
-			const res = await axios({
-				method: "POST",
-				url: BASE_URL,
-				data: {
-					query: `
-					mutation CreateWalletId($walletId: WalletIdCreateInput!) {
-						createWalletId(walletId: $walletId) {
-							id
-							identifier
-							provider {
-								id
-								delimiter
-							}
-							default {
-								address
-								chain {
-									id
-									name
-									chainId
-								}
-							}
-							others {
-								address
-								chain {
-									id
-									name
-									chainId
-								}
-							}
-						}
+		return callApi(
+			// todo
+			"uploadAndIndexWalletId",
+			`mutation A($data: WalletIdCreateInput!) {
+				uploadAndIndexWalletId(data: $data) {
+					walletId {
+						id
 					}
-					`,
-					variables: {
-						walletId: id,
-					},
-				},
-			});
-
-			const data = await res.data;
-			console.log(data, "Das");
-			setId(data.data.createWalletId);
-			return data.data.createWalletId;
-		} catch (e) {
-			console.log("i am running here");
-			console.log(JSON.stringify(e));
-			throw e;
-		}
+				}
+			}`,
+			{
+				data: id,
+			}
+		);
 	};
 
-	const getPaymentRequest = async () => {
+	const getPaymentRequest = async (where: RequestWhereInput) => {
+		return callApi(
+			"requests",
+			`
+			query Request($where: RequestWhereInput!) {
+				requests(where: $where) {
+					id
+					payer {
+					id
+					}
+					payee {
+						id
+					}
+					chain {
+						id
+						chainId
+						name
+					}
+					token
+					amount
+					label
+					message
+				}
+			}
+			`,
+			{
+				where: where,
+			}
+		);
 		try {
 			const res = await axios({
 				method: "POST",
@@ -309,90 +287,65 @@ export const useId = () => {
 	};
 
 	const createPaymentRequest = async (request: Request) => {
-		try {
-			console.log(request, "1");
-			const res = await axios({
-				method: "POST",
-				url: BASE_URL,
-				data: {
-					query: `
-					mutation PaymentRequest($request: RequestCreateInput!) {
-						paymentRequestsTestnet(request: $request) {
-							id
-						}
+		return callApi(
+			"paymentRequests",
+			`mutation PaymentRequest($request: RequestCreateInput!) {
+				paymentRequests(request: $request) {
+					id
+					payer {
+						id
 					}
-					`,
-					variables: {
-						request: request,
-					},
-				},
-			});
-			console.log("@");
-
-			const data = await res.data;
-			console.log(data, "Das");
-
-			const result = data.data.paymentRequestsTestnet;
-
-			return result;
-		} catch (e) {
-			console.log(e);
-			console.log(JSON.stringify(e));
-			throw e;
-		}
+					payee {
+						id
+					}
+					amount
+					chain {
+					 id
+					 chainId
+					 name
+					}
+					token
+					message
+					label
+				}
+			}`,
+			{
+				request,
+			}
+		);
 	};
 
 	const buildTransaction = async (
 		paymentRequestId: string,
 		userConfig: UserConfig
 	) => {
-		console.log({
-			paymentRequestId: paymentRequestId,
-			userConfig: userConfig,
-		});
-		try {
-			const res = await axios({
-				method: "POST",
-				url: BASE_URL,
-				data: {
-					query: `
-					query BuildTransaction($data: BuildTransactionInput) {
-						buildTransactionTestnet(data: $data) {
-							paymentRequestId {
-								id
-							}
-							transactionData
-							userConfig {
-								fromId {
-									id
-								}
-								fromChain {
-									id
-								}
-								fromAddress
-								fromToken
-							}
-						}
+		return callApi(
+			"buildTransaction",
+			`query BuildTransaction($data: BuildTransactionInput) {
+				buildTransaction(data: $data) {
+					paymentRequestId {
+						id
 					}
-					`,
-					variables: {
-						data: {
-							paymentRequestId: paymentRequestId,
-							userConfig: userConfig,
-						},
-					},
+					transactionData
+					userConfig {
+						fromId {
+							id
+						}
+						fromChain {
+							id
+						}
+						fromAddress
+						fromToken
+					}
+				}
+			}`,
+			{
+				data: {
+					paymentRequestId,
+					userConfig,
 				},
-			});
-
-			const data = await res.data;
-
-			const result = data.data.buildTransactionTestnet;
-
-			return result;
-		} catch (e) {
-			console.log(JSON.stringify(e));
-			throw e;
-		}
+			}
+		);
 	};
 
 	return {
