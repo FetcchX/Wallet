@@ -35,11 +35,19 @@ const Stack = createNativeStackNavigator();
 export function TabNavigation() {
   return (
     <Tab.Navigator
-      initialRouteName="home"
+      initialRouteName="Pfp"
       screenOptions={{
         tabBarStyle: {
           backgroundColor: COLORS.primary,
           padding: 12,
+          position: "absolute",
+          bottom: 20,
+          zIndex: 20,
+          marginHorizontal: 20,
+          borderRadius: 100,
+        },
+        tabBarLabelStyle: {
+          color: COLORS.secondary,
         },
       }}
     >
@@ -105,7 +113,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator
               screenOptions={{ headerShown: false }}
-              initialRouteName={"TabNavigation"}
+              initialRouteName={"createAccount"}
             >
               <Stack.Screen name="TabNavigation" component={TabNavigation} />
               <Stack.Screen name="Txs" component={Transections} />

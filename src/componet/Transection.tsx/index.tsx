@@ -14,7 +14,8 @@ export function Transection({ hash, address, ammount, date }: TransetionInfo) {
   return (
     <View
       style={{
-        padding: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
         marginBottom: 12,
         borderRadius: 14,
         backgroundColor: "#EAFDE0",
@@ -22,22 +23,29 @@ export function Transection({ hash, address, ammount, date }: TransetionInfo) {
     >
       <View
         style={{
-          marginTop: 12,
+          marginVertical: SIZES.small,
           flexDirection: "row",
           justifyContent: "space-between",
         }}
       >
-        <Text
+        <View
           style={{
             backgroundColor: "#515151",
-            color: "white",
             justifyContent: "center",
             paddingHorizontal: 12,
-            fontSize: 16,
           }}
         >
-          Withdraw
-        </Text>
+          <Text
+            style={{
+              color: "white",
+              justifyContent: "center",
+              fontSize: 16,
+              fontFamily: "KronaOne_400Regular",
+            }}
+          >
+            Withdraw
+          </Text>
+        </View>
         <View
           style={{
             flexDirection: "row",
@@ -66,13 +74,14 @@ export function Transection({ hash, address, ammount, date }: TransetionInfo) {
           style={{
             fontSize: SIZES.large,
             color: "#777E90",
+            fontFamily: "KronaOne_400Regular",
           }}
         >
           Ammount
         </Text>
         <Text
           style={{
-            color: "white",
+            fontFamily: "KronaOne_400Regular",
           }}
         >
           {ammount.toString().slice(0, 4)}
@@ -89,13 +98,14 @@ export function Transection({ hash, address, ammount, date }: TransetionInfo) {
           style={{
             fontSize: SIZES.large,
             color: "#777E90",
+            fontFamily: "KronaOne_400Regular",
           }}
         >
           walletID
         </Text>
         <Text
           style={{
-            color: "white",
+            fontFamily: "KronaOne_400Regular",
           }}
         >
           {address.slice(0, 10)}
@@ -113,6 +123,7 @@ export function Transection({ hash, address, ammount, date }: TransetionInfo) {
           style={{
             fontSize: SIZES.large,
             color: "#777E90",
+            fontFamily: "KronaOne_400Regular",
           }}
         >
           Date & time
@@ -120,6 +131,7 @@ export function Transection({ hash, address, ammount, date }: TransetionInfo) {
         <Text
           style={{
             color: "#777E90",
+            fontFamily: "KronaOne_400Regular",
           }}
         >
           {date}

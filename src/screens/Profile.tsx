@@ -17,7 +17,7 @@ export const Profile = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   // variables
-  const snapPoints = useMemo(() => ["25%", "50%", "100%"], []);
+  const snapPoints = useMemo(() => ["25%", "50%", "80%"], []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
@@ -43,6 +43,7 @@ export const Profile = () => {
               textAlign: "center",
               marginTop: -30,
               fontSize: 25,
+              fontFamily: "KronaOne_400Regular",
             }}
           >
             Profile
@@ -62,6 +63,7 @@ export const Profile = () => {
               style={{
                 color: "white",
                 fontSize: 30,
+                fontFamily: "KronaOne_400Regular",
               }}
             >
               S
@@ -80,6 +82,7 @@ export const Profile = () => {
               style={{
                 fontSize: 17,
                 marginHorizontal: 12,
+                fontFamily: "KronaOne_400Regular",
               }}
             >
               satyam@fetcch
@@ -97,6 +100,7 @@ export const Profile = () => {
               style={{
                 fontSize: 18,
                 fontWeight: "bold",
+                fontFamily: "KronaOne_400Regular",
                 marginBottom: 12,
               }}
             >
@@ -118,7 +122,13 @@ export const Profile = () => {
                   alignItems: "center",
                 }}
               >
-                <Text>0x3565909409</Text>
+                <Text
+                  style={{
+                    fontFamily: "KronaOne_400Regular",
+                  }}
+                >
+                  0x3565909409
+                </Text>
                 <View
                   style={{
                     height: 30,
@@ -137,6 +147,7 @@ export const Profile = () => {
           >
             <Text
               style={{
+                fontFamily: "KronaOne_400Regular",
                 fontSize: 18,
                 fontWeight: "bold",
                 marginVertical: 12,
@@ -191,6 +202,7 @@ export const Profile = () => {
         </View>
         <BottomSheet
           style={{
+            zIndex: 100,
             backgroundColor: COLORS.primary,
           }}
           handleStyle={{
@@ -205,14 +217,13 @@ export const Profile = () => {
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
         >
-          <ScrollView
-            contentContainerStyle={{
+          <View
+            style={{
               position: "relative",
               padding: 10,
               backgroundColor: COLORS.primary,
               height: "100%",
             }}
-            showsVerticalScrollIndicator={false}
           >
             <View
               style={{
@@ -240,53 +251,21 @@ export const Profile = () => {
                 <Text>Remove</Text>
               </TouchableOpacity>
             </View>
-            <View
+            <ScrollView
               style={{
-                backgroundColor: "#EAFDE0",
-                borderRadius: 10,
-                padding: 5,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
+                marginBottom: 60,
+                position: "relative",
               }}
             >
-              <TextInput
-                placeholder="search Chain"
-                style={{
-                  padding: 12,
-                  fontSize: 18,
-                  borderRadius: 10,
-                }}
-                value=""
-              ></TextInput>
-              <MaterialIcons name="search" color={COLORS.primary} size={30} />
-            </View>
-            <ChainAsset name="Etherium" />
+              <ChainAsset name="Etherium" />
 
-            <ChainAsset name="Etherium" />
-            <ChainAsset name="Etherium" />
-            <ChainAsset name="Etherium" />
-            <ChainAsset name="Etherium" />
-            <ChainAsset name="Etherium" />
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#EAFDE0",
-                padding: 14,
-                bottom: 20,
-                marginVertical: 20,
-                zIndex: 20,
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 18,
-                }}
-              >
-                Add chains
-              </Text>
-            </TouchableOpacity>
-          </ScrollView>
+              <ChainAsset name="Etherium" />
+              <ChainAsset name="Etherium" />
+              <ChainAsset name="Etherium" />
+              <ChainAsset name="Etherium" />
+              <ChainAsset name="Etherium" />
+            </ScrollView>
+          </View>
         </BottomSheet>
       </Safe>
     </>
