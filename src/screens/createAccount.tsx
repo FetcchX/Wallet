@@ -13,8 +13,6 @@ import { COLORS, SIZES } from "../styles/styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { CustomSheet } from "../componet/customshee";
-import { handlonPress } from "../hooks/useBotomsheet";
 import { useWallet } from "../hooks";
 import { useId } from "../hooks/useId";
 import { useAppContext } from "../context";
@@ -49,6 +47,7 @@ export const CreateAccount = ({ navigation }: any) => {
   const { evmWallets, setId } = useAppContext();
   const { getChains } = useChain();
   const { seedPhrase, generateSeedPhrase, generateEvmWallet } = useWallet();
+  const [genwallet, setGenwallet] = useState(false);
 
   const { id, createId } = useId();
 
@@ -75,68 +74,64 @@ export const CreateAccount = ({ navigation }: any) => {
     if (!bottomSheetRef) return;
     (bottomSheetRef as React.MutableRefObject<BottomSheet>).current.expand();
   };
+
+  const create = async () => {
+    const defaultAdress = evmWallets[0].address;
+    const otherAddresse = evmWallets[1].address;
+    const defaultChain = selectedChains[0].id;
+    const otherChins = selectedChains.slice(1).map((x: any) => x.id);
+    // create id
+    const id = await createId({
+      default: {
+        address: defaultAdress,
+        chain: defaultChain,
+      },
+      others: [
+        {
+          address: otherAddresse,
+          chain: otherChins,
+        },
+      ],
+      provider: "fetcch.testnet",
+      identifier: username,
+    });
+  };
+
   useEffect(() => {
     (async () => {
       const totalChains = await getChains();
       setChains(totalChains);
     })();
   }, []);
-
   useEffect(() => {
-    try {
-      if (seedPhrase) {
-        generateEvmWallet();
-        // navigation.navigate("home");
-      }
-    } catch (e) {
-      console.log(JSON.stringify(e), "3");
-      setLoading(false);
-    }
-  }, [seedPhrase]);
-
-  useEffect(() => {
-    (async () => {
+    if (genwallet) {
       try {
-        if (
-          evmWallets.length > 0 &&
-          selectedChains.length > 0 &&
-          username.length > 3
-        ) {
-          console.log("22");
-          const defaultAddress = {
-            address: evmWallets[0].address,
-            chain: selectedChains[0].id,
-          };
-          console.log(defaultAddress);
-
-          const wallets = evmWallets.slice(1);
-          console.log(wallets);
-          const otherAddresses = wallets.map((wallet) => {
-            return {
-              address: wallet.address,
-              chain: selectedChains.map((ch) => ch.id),
-            };
-          });
-          console.log(otherAddresses);
-
-          const id = await createId({
-            default: defaultAddress,
-            others: otherAddresses,
-            id: `${username}@fetcch.testnet`,
-            provider: "fetcch.testnet",
-            identifier: username,
-          });
-
-          console.log(id, "id2");
-
-          navigation.navigate("home");
+        console.log(selectedChains.length);
+        if (selectedChains.length > 1) {
+          generateEvmWallet(2);
+        } else if (selectedChains.length !== 0) {
+          console.log("running this ");
+          generateEvmWallet(1);
         }
       } catch (e) {
-        console.log(e, "@");
+        console.log(JSON.stringify(e), "3");
         setLoading(false);
-        setFailed(true);
       }
-    })();
+    }
+  }, [genwallet]);
+
+  useEffect(() => {
+    if (evmWallets && evmWallets.length > 0 && selectedChains.length > 0) {
+      if (selectedChains.length > 1 && evmWallets.length > 1) {
+        console.log("we are good to go");
+        console.log(evmWallets);
+        // get default address
+        create();
+      }
+    } else {
+      console.log("evm wallets", evmWallets);
+      console.log("you have not selected chains ");
+    }
   }, [evmWallets]);
 
   useEffect(() => {
@@ -144,9 +139,10 @@ export const CreateAccount = ({ navigation }: any) => {
   }, [id]);
 
   const createWallet = () => {
-    setLoading(true);
+    console.log(" starting here ");
+    setGenwallet(true);
     try {
-      generateEvmWallet();
+      setLoading(true);
     } catch (e) {
       console.log(e);
       setLoading(false);
@@ -176,7 +172,7 @@ export const CreateAccount = ({ navigation }: any) => {
           id: JSON.parse(a).id,
         });
         if (!id) return;
-        console.log(id, "dsadsadas");
+        console.log(id, " id hai yaha pe ");
         setId(id);
         navigation.navigate("home");
       })();
@@ -373,6 +369,7 @@ export const CreateAccount = ({ navigation }: any) => {
                   paddingHorizontal: 12,
                   backgroundColor: "#BFFAA0",
                   borderRadius: 100,
+                  marginBottom: 12,
                 }}
                 onPress={() => {
                   console.log(selectedChains, chain);
@@ -386,7 +383,7 @@ export const CreateAccount = ({ navigation }: any) => {
                     source={{
                       uri: chain.icon,
                     }}
-                    style={{ width: 32, height: 32 }}
+                    style={{ width: 22, height: 22 }}
                   />
                 </TouchableOpacity>
                 <Text
@@ -447,8 +444,8 @@ const style = StyleSheet.create({
     borderRadius: 100,
   },
   circle: {
-    height: 50,
-    width: 50,
+    height: 30,
+    width: 30,
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",

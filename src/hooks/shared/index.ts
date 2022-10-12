@@ -3,39 +3,48 @@ import Constants from "expo-constants";
 
 const { manifest } = Constants;
 
-const BASE_URL = `http://${manifest?.debuggerHost
-	?.split(":")
-	.shift()}:5000/graphql/`;
+// const BASE_URL = `http://${manifest?.debuggerHost
+// 	?.split(":")
+// 	.shift()}:5000/graphql/`;
 
-const SECRET_KEY = "cee7394a-6cb8-436e-870a-47709fd3e4b8";
+const BASE_URL = "https://testnet-api.fetcch.xyz/graphql";
+
+const SECRET_KEY = "672dd2e6-bdef-4ceb-b71f-a6c7475054b5";
 
 export const callApi = async (
-	queryName: string,
-	query: string,
-	variables: object
+  queryName: string,
+  query: string,
+  variables: object
 ) => {
-	try {
-		const res = await axios({
-			method: "POST",
-			url: BASE_URL,
-			data: {
-				query,
-				variables,
-			},
-			headers: {
-				"secret-key": SECRET_KEY,
-			},
-		});
+  try {
+    console.log("calling api");
+    console.log(query);
+    console.log(variables);
+    const res = await axios({
+      method: "POST",
+      url: BASE_URL,
+      data: {
+        query,
+        variables,
+      },
+      headers: {
+        "secret-key": SECRET_KEY,
+      },
+    });
+    console.log("response is this");
+    console.log(res.data);
 
-		const data = await res.data;
+    const data = res.data;
 
-		if (data.errors) {
-			throw JSON.stringify(data.errors);
-		}
+    if (data.errors) {
+      console.log("havig somer eror here ");
+      throw JSON.stringify(data.errors);
+    }
 
-		return data.data[queryName];
-	} catch (e) {
-		console.log(JSON.stringify(e));
-		throw e;
-	}
+    return data.data[queryName];
+  } catch (e) {
+    console.log("some common eereor");
+    console.log(JSON.stringify(e));
+    throw e;
+  }
 };
