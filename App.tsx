@@ -113,7 +113,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator
               screenOptions={{ headerShown: false }}
-              initialRouteName={"createAccount"}
+              initialRouteName={"home"}
             >
               <Stack.Screen name="TabNavigation" component={TabNavigation} />
               <Stack.Screen name="Txs" component={Transections} />

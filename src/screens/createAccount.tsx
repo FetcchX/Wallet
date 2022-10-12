@@ -78,9 +78,23 @@ export const CreateAccount = ({ navigation }: any) => {
   const create = async () => {
     const defaultAdress = evmWallets[0].address;
     const otherAddresse = evmWallets[1].address;
-    const defaultChain = selectedChains[0].id;
-    const otherChins = selectedChains.slice(1).map((x: any) => x.id);
+    const defaultChain = Number(selectedChains[0].id);
+    const otherChins = selectedChains.slice(1).map((x: any) => Number(x.id));
     // create id
+    console.log({
+      default: {
+        address: defaultAdress,
+        chain: defaultChain,
+      },
+      others: [
+        {
+          address: otherAddresse,
+          chain: otherChins,
+        },
+      ],
+      provider: "fetcch.testnet",
+      identifier: username,
+    })
     const id = await createId({
       default: {
         address: defaultAdress,
