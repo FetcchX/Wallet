@@ -7,31 +7,14 @@ import { useEffect, useState } from "react";
 export const ChainAsset = ({
   name,
   icon,
-  active,
   chainId,
+  active,
 }: {
   chainId: string;
   name: string;
   icon: string;
-  active: any;
+  active: boolean;
 }) => {
-  const [chainExistOnAdress, setChainExistOnAdress] = useState(false);
-
-  const checkChainExist = () => {
-    active?.chain.map((chain: any) => {
-      console.log("run run", chain, chainId);
-      if (chain.id == chainId) {
-        console.log("true");
-        setChainExistOnAdress(true);
-        return;
-      }
-    });
-  };
-
-  useEffect(() => {
-    checkChainExist();
-  }, []);
-
   useEffect(() => {
     console.log("active", active, chainId);
   });
@@ -71,7 +54,7 @@ export const ChainAsset = ({
                 fontSize: 20,
               }}
             >
-              {chainExistOnAdress ? "-" : "+"}
+              {active ? "-" : "+"}
             </Text>
           </View>
         </View>

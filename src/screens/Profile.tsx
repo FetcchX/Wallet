@@ -13,6 +13,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { ChainAsset } from "../componet/profile/Chain";
 import { useAppContext } from "../context";
 import { useChain } from "../hooks/useChain";
+import { ChainAssets } from "../componet/profile/ChainAssets.";
 
 export const Profile = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -285,16 +286,7 @@ export const Profile = () => {
                 position: "relative",
               }}
             >
-              {chains.map((chain: any) => {
-                return (
-                  <ChainAsset
-                    chainId={chain.id}
-                    active={activeAdressonBottomSheet}
-                    icon={chain.icon}
-                    name={chain.name}
-                  />
-                );
-              })}
+              <ChainAssets active={activeAdressonBottomSheet} />
             </ScrollView>
           </View>
         </BottomSheet>
