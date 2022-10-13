@@ -178,7 +178,7 @@ export const HomeTop = ({ navigation, handlre }: Props) => {
           }}
           style={{
             width: "50%",
-            backgroundColor: "white",
+            backgroundColor: currentTab == "assets" ? "white" : "#000",
             padding: 12,
           }}
         >
@@ -199,6 +199,7 @@ export const HomeTop = ({ navigation, handlre }: Props) => {
           style={{
             padding: 12,
             width: "50%",
+            backgroundColor: currentTab == "nfts" ? "white" : "black",
           }}
         >
           <Text
