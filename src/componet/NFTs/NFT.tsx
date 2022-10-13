@@ -21,7 +21,9 @@ export const NFT = ({ image, name }: { image: string; name: string }) => {
             height: 150,
             borderRadius: 12,
           }}
-          source={require("../../../assets/nft04.jpeg")}
+          source={{
+            uri: image
+          }}
           resizeMethod="resize"
           resizeMode="cover"
         />
@@ -43,7 +45,7 @@ export const NFT = ({ image, name }: { image: string; name: string }) => {
               fontSize: 12,
             }}
           >
-            NFT
+            {name}
           </Text>
         </View>
       </View>

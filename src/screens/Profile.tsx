@@ -117,7 +117,6 @@ export const Profile = () => {
             <Text
               style={{
                 fontSize: 18,
-                fontWeight: "bold",
                 fontFamily: "KronaOne_400Regular",
                 marginBottom: 12,
               }}
@@ -173,7 +172,6 @@ export const Profile = () => {
               style={{
                 fontFamily: "KronaOne_400Regular",
                 fontSize: 18,
-                fontWeight: "bold",
                 marginVertical: 12,
               }}
             >
@@ -198,7 +196,9 @@ export const Profile = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Text>{otheradd.address.slice(0, 22) + "..."}</Text>
+                    <Text style={{
+                      fontFamily: "KronaOne_400Regular",
+                    }}>{otheradd.address.slice(0, 15) + "..."}</Text>
                     <View
                       style={{
                         flexDirection: "row",

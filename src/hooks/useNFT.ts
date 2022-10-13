@@ -33,6 +33,7 @@ export const getNFT = async (address: string, chain: string) => {
       params: {
         owner: address,
         withMetadata: true,
+        pageSize: 8
       },
     });
 

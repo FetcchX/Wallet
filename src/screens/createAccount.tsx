@@ -81,7 +81,7 @@ export const CreateAccount = ({ navigation }: any) => {
     const defaultChain = Number(selectedChains[0].id);
     const otherChins = selectedChains.slice(1).map((x: any) => Number(x.id));
     // create id
-    console.log({
+    console.log(JSON.stringify({
       default: {
         address: defaultAdress,
         chain: defaultChain,
@@ -94,7 +94,7 @@ export const CreateAccount = ({ navigation }: any) => {
       ],
       provider: "fetcch.testnet",
       identifier: username,
-    });
+    }));
     const id = await createId({
       default: {
         address: defaultAdress,

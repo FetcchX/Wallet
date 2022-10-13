@@ -14,7 +14,7 @@ export const ChainAssets = ({ active }: props) => {
   useEffect(() => {
     (async () => {
       const totalChains = await getChains();
-      console.log(totalChains);
+      console.log(totalChains, "Dsafds");
       setChains(totalChains);
     })();
   }, []);
