@@ -1,5 +1,6 @@
 import {
   ImageBackground,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -178,7 +179,7 @@ export const HomeTop = ({ navigation, handlre }: Props) => {
           }}
           style={{
             width: "50%",
-            backgroundColor: currentTab == "assets" ? "white" : "#000",
+            backgroundColor: currentTab == "assets" ? "white" : "#E8FDDE",
             padding: 12,
           }}
         >
@@ -199,7 +200,7 @@ export const HomeTop = ({ navigation, handlre }: Props) => {
           style={{
             padding: 12,
             width: "50%",
-            backgroundColor: currentTab == "nfts" ? "white" : "black",
+            backgroundColor: currentTab == "nfts" ? "white" : "#E8FDDE",
           }}
         >
           <Text
@@ -213,11 +214,18 @@ export const HomeTop = ({ navigation, handlre }: Props) => {
           </Text>
         </TouchableOpacity>
       </View>
-      {currentTab == "assets" ? (
-        <Assets handlre={handlre} assets={erc20} />
-      ) : (
-        <NFTs />
-      )}
+      <ScrollView
+        style={{
+          flex: 1,
+          marginBottom: 150,
+        }}
+      >
+        {currentTab == "assets" ? (
+          <Assets handlre={handlre} assets={erc20} />
+        ) : (
+          <NFTs />
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -226,6 +234,7 @@ const style = StyleSheet.create({
   constainer: {
     width: "100%",
     alignItems: "center",
+    height: "100%",
   },
   dash: {
     width: "100%",

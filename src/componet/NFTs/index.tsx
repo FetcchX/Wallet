@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, ActivityIndicator } from "react-native";
 import { useAppContext } from "../../context";
 import { getNFT } from "../../hooks/useNFT";
+import { COLORS } from "../../styles/styles";
 import { NFT } from "./NFT";
 
 export const NFTs = () => {
@@ -12,7 +13,7 @@ export const NFTs = () => {
       "0x9c748a6b2fD26757f6D15b82f4bF7F7aEF66F4Bb",
       "1"
     );
-    console.log(data, "dsadsdfd")
+    console.log(data, "dsadsdfd");
     setNfts(data.ownedNfts);
   };
 
@@ -35,20 +36,24 @@ export const NFTs = () => {
             marginTop: 20,
           }}
         >
-            {nfts &&
-              nfts.length > 0 &&
-              nfts.map((nft: any) => {
-                return (
-                  <NFT
-                    image={nft.metadata.image}
-                    name={
-                      nft.metadata.name && `${nft.metadata.name.substring(0, 5)}...`
-                    }
-                  />
-                )
-              })}
+          {nfts ? (
+            nfts.length > 0 &&
+            nfts.map((nft: any) => {
+              return (
+                <NFT
+                  image={nft.metadata.image}
+                  name={
+                    nft.metadata.name &&
+                    `${nft.metadata.name.substring(0, 5)}...`
+                  }
+                />
+              );
+            })
+          ) : (
+            <ActivityIndicator size={30} color={COLORS.primary} />
+          )}
         </View>
       </ScrollView>
     </>
-  )
+  );
 };

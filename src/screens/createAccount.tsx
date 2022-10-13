@@ -81,20 +81,22 @@ export const CreateAccount = ({ navigation }: any) => {
     const defaultChain = Number(selectedChains[0].id);
     const otherChins = selectedChains.slice(1).map((x: any) => Number(x.id));
     // create id
-    console.log(JSON.stringify({
-      default: {
-        address: defaultAdress,
-        chain: defaultChain,
-      },
-      others: [
-        {
-          address: otherAddresse,
-          chain: otherChins,
+    console.log(
+      JSON.stringify({
+        default: {
+          address: defaultAdress,
+          chain: defaultChain,
         },
-      ],
-      provider: "fetcch.testnet",
-      identifier: username,
-    }));
+        others: [
+          {
+            address: otherAddresse,
+            chain: otherChins,
+          },
+        ],
+        provider: "fetcch.testnet",
+        identifier: username,
+      })
+    );
     const id = await createId({
       default: {
         address: defaultAdress,
@@ -182,21 +184,21 @@ export const CreateAccount = ({ navigation }: any) => {
     }
   }, [failed]);
 
-  useFocusEffect(
-    useCallback(() => {
-      (async () => {
-        const a: any = await AsyncStorage.getItem("walletid");
-        console.log(JSON.parse(a), "ew");
-        const id = await getId({
-          id: JSON.parse(a).id,
-        });
-        if (!id) return;
-        console.log(id, " id hai yaha pe ");
-        setId(id);
-        navigation.navigate("TabNavigation");
-      })();
-    }, [])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     (async () => {
+  //       const a: any = await AsyncStorage.getItem("walletid");
+  //       console.log(JSON.parse(a), "ew");
+  //       const id = await getId({
+  //         id: JSON.parse(a).id,
+  //       });
+  //       if (!id) return;
+  //       console.log(id, " id hai yaha pe ");
+  //       setId(id);
+  //       navigation.navigate("TabNavigation");
+  //     })();
+  //   }, [])
+  // );
 
   return (
     <View style={style.container}>
