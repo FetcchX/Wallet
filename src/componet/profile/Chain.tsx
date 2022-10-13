@@ -32,9 +32,9 @@ export const ChainAsset = ({
     checkChainExist();
   }, []);
 
-  // useEffect(() => {
-  //   console.log("active", active, chainId);
-  // }, []);
+  useEffect(() => {
+    console.log("active", active, chainId);
+  });
   return (
     <TouchableOpacity>
       <View

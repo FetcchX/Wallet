@@ -12,10 +12,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { ChainAsset } from "../componet/profile/Chain";
 import { useAppContext } from "../context";
-import { getChains } from "fetcch-chain-data";
+import { useChain } from "../hooks/useChain";
 
 export const Profile = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const { getChains } = useChain();
   const { id } = useAppContext();
   const [activeAdressonBottomSheet, setActiveAddressOnBottomSheet] =
     useState<any>();
@@ -287,7 +288,7 @@ export const Profile = () => {
               {chains.map((chain: any) => {
                 return (
                   <ChainAsset
-                    chainId={chain.chainId}
+                    chainId={chain.id}
                     active={activeAdressonBottomSheet}
                     icon={chain.icon}
                     name={chain.name}
