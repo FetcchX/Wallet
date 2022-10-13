@@ -37,7 +37,7 @@ export const useWallet = () => {
       privateKey: wallet.privateKey,
     });
     if (index > 1) {
-      for (let i = 1; i < index; i++) {
+      for (let i = 1; i <= index; i++) {
         const newWallet = ethers.Wallet.fromMnemonic(
           wallet.mnemonic.phrase,
           `m/44'/60'/0'/0/${i.toString()}`

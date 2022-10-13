@@ -81,7 +81,7 @@ export const Main = ({ navigation }: any) => {
           showsVerticalScrollIndicator={false}
         >
           {evmWallets
-            .filter((w) => w.address !== account?.address)
+            ?.filter((w) => w.address !== account?.address)
             .map((wallet) => (
               <TouchableOpacity
                 style={{

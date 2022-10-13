@@ -12,60 +12,61 @@ import { useWallet } from "../../hooks";
 import { useAppContext } from "../../context";
 
 export const Header = ({ handleTokenOpenPress }: any) => {
-	const { id } = useId();
-	const { evmWallets } = useAppContext();
-	console.log(handleTokenOpenPress);
-	return (
-		<View
-			style={{
-				...headerstyles.container,
-				marginTop: 10,
-			}}
-		>
-			<DOne />
-			<TouchableOpacity>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-					}}
-				>
-					<Text
-						style={{
-							fontSize: SIZES.small,
-							marginRight: 12,
-							fontFamily: "KronaOne_400Regular",
-						}}
-					>
-						{id?.id}
-					</Text>
-					<TouchableOpacity
-						style={headerstyles.circle}
-						onPress={() => {
-							handleTokenOpenPress();
-						}}
-					/>
-				</View>
-			</TouchableOpacity>
-		</View>
-	);
+  const { id } = useId();
+  const { evmWallets } = useAppContext();
+  console.log(handleTokenOpenPress);
+  return (
+    <View
+      style={{
+        ...headerstyles.container,
+        marginTop: 10,
+        marginBottom: 12,
+      }}
+    >
+      <DOne />
+      <TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: SIZES.small,
+              marginRight: 12,
+              fontFamily: "KronaOne_400Regular",
+            }}
+          >
+            {id?.identifier}
+          </Text>
+          <TouchableOpacity
+            style={headerstyles.circle}
+            onPress={() => {
+              handleTokenOpenPress();
+            }}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 const headerstyles = StyleSheet.create({
-	container: {
-		width: "100%",
-		padding: SIZES.xsmall,
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-	circle: {
-		height: 25,
-		width: 25,
-		borderRadius: 100,
-		alignItems: "center",
-		justifyContent: "center",
-		backgroundColor: "#ccc",
-		marginVertical: SIZES.small,
-	},
+  container: {
+    width: "100%",
+    padding: SIZES.xsmall,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  circle: {
+    height: 25,
+    width: 25,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ccc",
+    marginVertical: SIZES.small,
+  },
 });

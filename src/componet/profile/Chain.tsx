@@ -1,9 +1,40 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { COLORS, SIZES } from "../../styles/styles";
 import Logo from "../../../assets/usdc.svg";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useEffect, useState } from "react";
 
-export const ChainAsset = ({ name }: { name: string }) => {
+export const ChainAsset = ({
+  name,
+  icon,
+  active,
+  chainId,
+}: {
+  chainId: string;
+  name: string;
+  icon: string;
+  active: any;
+}) => {
+  const [chainExistOnAdress, setChainExistOnAdress] = useState(false);
+
+  const checkChainExist = () => {
+    active?.chain.map((chain: any) => {
+      console.log("run run", chain, chainId);
+      if (chain.id == chainId) {
+        console.log("true");
+        setChainExistOnAdress(true);
+        return;
+      }
+    });
+  };
+
+  useEffect(() => {
+    checkChainExist();
+  }, []);
+
+  // useEffect(() => {
+  //   console.log("active", active, chainId);
+  // }, []);
   return (
     <TouchableOpacity>
       <View
@@ -15,14 +46,14 @@ export const ChainAsset = ({ name }: { name: string }) => {
       >
         <View style={AssetStyle.container}>
           <View style={AssetStyle.left}>
-            <Logo
-              width={40}
-              style={{
-                marginRight: 12,
+            <Image
+              style={{ width: 26, height: 26, marginRight: 12 }}
+              source={{
+                uri: icon,
               }}
             />
             <View>
-              <Text style={AssetStyle.token}>ox123921803.. </Text>
+              <Text style={AssetStyle.token}>{name.slice(0, 20)}</Text>
             </View>
           </View>
           <View
@@ -40,7 +71,7 @@ export const ChainAsset = ({ name }: { name: string }) => {
                 fontSize: 20,
               }}
             >
-              +
+              {chainExistOnAdress ? "-" : "+"}
             </Text>
           </View>
         </View>

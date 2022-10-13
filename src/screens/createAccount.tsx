@@ -94,7 +94,7 @@ export const CreateAccount = ({ navigation }: any) => {
       ],
       provider: "fetcch.testnet",
       identifier: username,
-    })
+    });
     const id = await createId({
       default: {
         address: defaultAdress,
@@ -109,6 +109,11 @@ export const CreateAccount = ({ navigation }: any) => {
       provider: "fetcch.testnet",
       identifier: username,
     });
+    // setId(id);
+    console.log("this is my id", id);
+    setId(id.walletId);
+
+    navigation.navigate("TabNavigation");
   };
 
   useEffect(() => {
@@ -188,7 +193,7 @@ export const CreateAccount = ({ navigation }: any) => {
         if (!id) return;
         console.log(id, " id hai yaha pe ");
         setId(id);
-        navigation.navigate("home");
+        navigation.navigate("TabNavigation");
       })();
     }, [])
   );

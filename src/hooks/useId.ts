@@ -7,92 +7,92 @@ import { callApi } from "./shared";
 const { manifest } = Constants;
 
 export interface RequestWhereInput {
-	id?: number;
-	payer?: WalletId;
-	payee?: WalletId;
-	token?: string;
-	chain?: number;
-	amount?: string;
-	message?: string;
-	label?: string;
-	data?: string;
-	executed?: boolean;
-	transactionHash?: string;
-	sameChain?: boolean;
-	fromChain?: number;
-	fromToken?: string;
-	dstTransactionHash?: string;
+  id?: number;
+  payer?: WalletId;
+  payee?: WalletId;
+  token?: string;
+  chain?: number;
+  amount?: string;
+  message?: string;
+  label?: string;
+  data?: string;
+  executed?: boolean;
+  transactionHash?: string;
+  sameChain?: boolean;
+  fromChain?: number;
+  fromToken?: string;
+  dstTransactionHash?: string;
 }
 
 export interface GenerateMessageWalletId {
-	identifier: string;
-	provider: string;
-	default: {
-		address: string;
-		chain: number;
-	};
-	others: {
-		address: string;
-		chain: number[];
-	}[];
-	currentSignature?: string;
-	previousSignature?: string;
+  identifier: string;
+  provider: string;
+  default: {
+    address: string;
+    chain: number;
+  };
+  others: {
+    address: string;
+    chain: number[];
+  }[];
+  currentSignature?: string;
+  previousSignature?: string;
 }
 
 export interface Chain {
-	id: string;
-	name: string;
-	chainId: string;
+  id: string;
+  name: string;
+  chainId: string;
 }
 
 export interface WalletId {
-	id?: string;
-	identifier?: string;
-	provider?: {
-		id?: string;
-		delimiter?: string;
-	};
-	default?: {
-		address?: string;
-		chain?: Chain;
-	};
-	others?: {
-		address?: string;
-		chain?: Chain[];
-	}[];
-	currentSignature?: string;
-	previousSignature?: string;
+  id?: string;
+  identifier?: string;
+  provider?: {
+    id?: string;
+    delimiter?: string;
+  };
+  default?: {
+    address?: string;
+    chain?: Chain;
+  };
+  others?: {
+    address?: string;
+    chain?: Chain[];
+  }[];
+  currentSignature?: string;
+  previousSignature?: string;
 }
 
 export interface UserConfig {
-	fromAddress: string;
-	fromChain: string;
-	fromId: string;
-	fromToken: string;
+  fromAddress: string;
+  fromChain: string;
+  fromId: string;
+  fromToken: string;
 }
 
 export interface Request {
-	payer: string;
-	payee: string;
-	chain: string;
-	token: string;
-	amount: string;
-	message: string;
-	label: string;
+  payer: string;
+  payee: string;
+  chain: string;
+  token: string;
+  amount: string;
+  message: string;
+  label: string;
 }
 
 // const BASE_URL = `http://${manifest?.debuggerHost
 // 	?.split(":")
 // 	.shift()}:5000/graphql/`;
-const BASE_URL = "https://testnet-api.fetcch.xyz/graphql"
+const BASE_URL = "https://testnet-api.fetcch.xyz/graphql";
 
 export const useId = () => {
-	const { id, setId } = useAppContext();
+  const { id, setId } = useAppContext();
 
-	const findAddress = async (id: string, chain?: number) => {
-		return callApi(
-			"findAddress",
-			`query FindAddress($data: FindAddressInput!) {
+  const findAddress = async (id: string, chain?: number) => {
+    return callApi(
+      "findAddress",
+      `query FindAddress($data: FindAddressInput!) {
 			findAddress(data: $data) {
 				address
 				chain {
@@ -102,25 +102,25 @@ export const useId = () => {
 				}
 			}
 		}`,
-			{
-				data: {
-					id: id,
-					fallbackToDefault: true,
-				},
-			}
-		);
-	};
+      {
+        data: {
+          id: id,
+          fallbackToDefault: true,
+        },
+      }
+    );
+  };
 
-	const getId = async ({
-		id,
-		signedMsg,
-	}: {
-		id?: string;
-		signedMsg?: string;
-	}) => {
-		return callApi(
-			"walletId",
-			`query GetUserData($data: WalletIdDataInput!) {
+  const getId = async ({
+    id,
+    signedMsg,
+  }: {
+    id?: string;
+    signedMsg?: string;
+  }) => {
+    return callApi(
+      "walletId",
+      `query GetUserData($data: WalletIdDataInput!) {
 				walletId(data:$data) {
 					id
 					provider {
@@ -152,19 +152,19 @@ export const useId = () => {
 				}
 			}
 			`,
-			{
-				data: {
-					id,
-					signedMsg,
-				},
-			}
-		);
-	};
+      {
+        data: {
+          id,
+          signedMsg,
+        },
+      }
+    );
+  };
 
-	const generateMessage = async (id: GenerateMessageWalletId) => {
-		return callApi(
-			"generateMessage",
-			`query A($id: WalletIdCreateInput!) {
+  const generateMessage = async (id: GenerateMessageWalletId) => {
+    return callApi(
+      "generateMessage",
+      `query A($id: WalletIdCreateInput!) {
 				generateMessage(id: $id) {
 					message
 					nonce
@@ -197,34 +197,59 @@ export const useId = () => {
 					providerSignature
 				}
 			}`,
-			{
-				id: id,
-			}
-		);
-	};
+      {
+        id: id,
+      }
+    );
+  };
 
-	const createId = async (id: GenerateMessageWalletId) => {
-		console.log("creating id")
-		return callApi(
-			// todo
-			"uploadAndIndexWalletId",
-			`mutation A($data: WalletIdCreateInput!) {
+  const createId = async (id: GenerateMessageWalletId) => {
+    console.log("creating id");
+    return callApi(
+      // todo
+      "uploadAndIndexWalletId",
+      `mutation A($data: WalletIdCreateInput!) {
 				uploadAndIndexWalletId(data: $data) {
 					walletId {
 						id
+    					identifier
+						provider {
+						id
+						delimiter
+						}
+						default {
+						address
+						chain {
+							id
+							chainId
+							icon
+							name
+						}
+						}
+						others {
+						address
+						chain {
+							id
+							chainId
+							icon
+							name
+						}
+						}
+						syncedAt
+						createdAt
 					}
 				}
 			}`,
-			{
-				data: id,
-			}
-		);
-	};
+      {
+        data: id,
+      }
+    );
+  };
 
-	const getPaymentRequest = async (where: RequestWhereInput) => {
-		return callApi(
-			"requests",
-			`
+  const getPaymentRequest = async (where: RequestWhereInput) => {
+    return callApi(
+      "requests",
+      `
 			query Request($where: RequestWhereInput!) {
 				requests(where: $where) {
 					id
@@ -246,16 +271,16 @@ export const useId = () => {
 				}
 			}
 			`,
-			{
-				where: where,
-			}
-		);
-		try {
-			const res = await axios({
-				method: "POST",
-				url: BASE_URL,
-				data: {
-					query: `
+      {
+        where: where,
+      }
+    );
+    try {
+      const res = await axios({
+        method: "POST",
+        url: BASE_URL,
+        data: {
+          query: `
 					query {
 						requestsTestnet(where: { fromId: { id: "${id?.id}" } }) {
 							id
@@ -274,24 +299,24 @@ export const useId = () => {
 						}
 					}
 					`,
-				},
-			});
+        },
+      });
 
-			const data = await res.data;
+      const data = await res.data;
 
-			const result = data.data.requestsTestnet;
+      const result = data.data.requestsTestnet;
 
-			return result;
-		} catch (e) {
-			console.log(JSON.stringify(e));
-			throw e;
-		}
-	};
+      return result;
+    } catch (e) {
+      console.log(JSON.stringify(e));
+      throw e;
+    }
+  };
 
-	const createPaymentRequest = async (request: Request) => {
-		return callApi(
-			"paymentRequests",
-			`mutation PaymentRequest($request: RequestCreateInput!) {
+  const createPaymentRequest = async (request: Request) => {
+    return callApi(
+      "paymentRequests",
+      `mutation PaymentRequest($request: RequestCreateInput!) {
 				paymentRequests(request: $request) {
 					id
 					payer {
@@ -311,19 +336,19 @@ export const useId = () => {
 					label
 				}
 			}`,
-			{
-				request,
-			}
-		);
-	};
+      {
+        request,
+      }
+    );
+  };
 
-	const buildTransaction = async (
-		paymentRequestId: string,
-		userConfig: UserConfig
-	) => {
-		return callApi(
-			"buildTransaction",
-			`query BuildTransaction($data: BuildTransactionInput) {
+  const buildTransaction = async (
+    paymentRequestId: string,
+    userConfig: UserConfig
+  ) => {
+    return callApi(
+      "buildTransaction",
+      `query BuildTransaction($data: BuildTransactionInput) {
 				buildTransaction(data: $data) {
 					paymentRequestId {
 						id
@@ -341,23 +366,23 @@ export const useId = () => {
 					}
 				}
 			}`,
-			{
-				data: {
-					paymentRequestId,
-					userConfig,
-				},
-			}
-		);
-	};
+      {
+        data: {
+          paymentRequestId,
+          userConfig,
+        },
+      }
+    );
+  };
 
-	return {
-		id,
-		getId,
-		generateMessage,
-		createId,
-		getPaymentRequest,
-		buildTransaction,
-		createPaymentRequest,
-		findAddress,
-	};
+  return {
+    id,
+    getId,
+    generateMessage,
+    createId,
+    getPaymentRequest,
+    buildTransaction,
+    createPaymentRequest,
+    findAddress,
+  };
 };
