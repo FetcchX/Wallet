@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 // import Logo from "../../../assets/usdc.svg";
 import { SIZES } from "../styles/styles";
 
 export const Account = ({
-  name,
+  account,
   balance,
+  setAccount
 }: {
-  name: string;
+  account: any;
   balance: string;
+  setAccount: any
 }) => {
   return (
     <View
@@ -17,21 +19,21 @@ export const Account = ({
         marginVertical: 8,
       }}
     >
-      <View style={AssetStyle.container}>
+      <TouchableOpacity onPress={() => setAccount(account)} style={AssetStyle.container}>
         <View style={AssetStyle.left}>
           <View>
-            <Text style={AssetStyle.token}>Account1</Text>
+            <Text style={AssetStyle.token}>{account.address}</Text>
             <Text
               style={{
                 fontSize: 8,
                 fontFamily: "KronaOne_400Regular",
               }}
             >
-              0xweijfwoijwoefjoe
+              {balance}
             </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -20,6 +20,7 @@ import { useBalance } from "../hooks/useBalance";
 import { useChain } from "../hooks/useChain";
 import { Token } from "../componet/Token";
 import { Account } from "../componet/Account";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const Send = ({ navigation }: any) => {
   const { getAddressERC20Balance, getAddressNativeBalance } = useBalance();
@@ -27,26 +28,29 @@ export const Send = ({ navigation }: any) => {
   const { evmWallets } = useAppContext();
   const { getChains } = useChain();
 
-  const [chain, setChain] = useState<any>();
+  const [chain, setChain] = useState<any>(id?.default.chain);
   const [chains, setChains] = useState<any[]>([]);
-  const [token, setToken] = useState(getTokens(1)[0]);
+  const [token, setToken] = useState(getTokens()[1][0]);
   const [tokens, setTokens] = useState<any[]>([]);
   const [toId, setToId] = useState("");
   const [amount, setAmount] = useState("");
   const [account, setAccount] = useState(evmWallets[0]);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    (async () => {
-      const totalChains = await getChains();
-      console.log(totalChains, "Dsadsa");
-      const chain = totalChains.filter(
-        (chain) => chain.id === id?.default.chain.id
-      );
-      setChain(chain);
-      setChains(totalChains);
-    })();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        const totalChains = await getChains();
+        console.log(totalChains, "Dsadsa");
+        const chain = totalChains.filter(
+          (chain) => chain.id === id?.default.chain.id
+        );
+        console.log(chain, "Dsa")
+        setChain(chain);
+        setChains(totalChains);
+      })();
+    }, [])
+  )
 
   useEffect(() => {
     (async () => {
@@ -71,6 +75,7 @@ export const Send = ({ navigation }: any) => {
         ];
 
         // console.log(native, erc20Balances, "dsadsa");
+        setToken(native[0])
         setTokens(native);
       }
     })();
@@ -96,6 +101,7 @@ export const Send = ({ navigation }: any) => {
   };
 
   useEffect(() => {
+    console.log(tokens, "sda")
     if (tokens.length > 0) setToken(tokens[0]);
   }, [tokens]);
 
@@ -115,7 +121,8 @@ export const Send = ({ navigation }: any) => {
     // });
 
     const paymentRequest = await createPaymentRequest({
-      toId: toId,
+      payee: toId,
+      payer: id?.id as string,
       chain: chain.id,
       amount: ethers.utils.parseUnits(amount, token.decimals).toString(),
       message: "Payment",
@@ -413,32 +420,10 @@ export const Send = ({ navigation }: any) => {
           }}
           showsVerticalScrollIndicator={false}
         >
-          {/* {evmWallets.map((wallet) => (
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                marginBottom: 10,
-              }}
-              onPress={() => {
-                setToken(token);
-              }}
-            >
-              <Text
-                style={{
-                  marginLeft: 20,
-                  fontSize: 14,
-                  fontFamily: "KronaOne_400Regular",
-                }}
-              >
-                {wallet.address.substring(0, 20)}...
-              </Text>
-            </TouchableOpacity>
-          ))} */}
-          <Account name="account 1" balance="124" />
+          {evmWallets.map((wallet) => (
+            <Account setAccount={setAccount} account={wallet} balance={""} />
+          ))}
+          
         </ScrollView>
       </BottomSheet>
       <BottomSheet
@@ -528,9 +513,6 @@ export const Send = ({ navigation }: any) => {
                   </TouchableOpacity>
                 </TouchableOpacity>
               ))}
-            <Token />
-            <Token />
-            <Token />
           </ScrollView>
         </View>
       </BottomSheet>
