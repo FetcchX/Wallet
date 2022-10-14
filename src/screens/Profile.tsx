@@ -14,8 +14,10 @@ import { ChainAsset } from "../componet/profile/Chain";
 import { useAppContext } from "../context";
 import { useChain } from "../hooks/useChain";
 import { ChainAssets } from "../componet/profile/ChainAssets.";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const Profile = () => {
+  const [changed, setChanged] = useState(false)
   const bottomSheetRef = useRef<BottomSheet>(null);
   const { getChains } = useChain();
   const { id } = useAppContext();
@@ -24,15 +26,18 @@ export const Profile = () => {
   const [chains, setChains] = useState<any[]>([]);
 
   useEffect(() => {
-    console.log(id);
+    console.log(chains, "DSA");
   });
-  useEffect(() => {
-    (async () => {
-      const totalChains = await getChains();
-      console.log(totalChains);
-      setChains(totalChains);
-    })();
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        const totalChains = await getChains();
+        console.log(totalChains);
+        setChains(totalChains);
+      })();
+    }, [])
+  )
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%", "80%"], []);
@@ -123,45 +128,51 @@ export const Profile = () => {
             >
               Default Address
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                handleTokenOpenPress();
-              }}
-            >
-              <View
-                style={{
-                  padding: 15,
-                  borderRadius: 12,
-                  justifyContent: "space-between",
-                  width: "100%",
-                  backgroundColor: "#E0FFD0",
-                  flexDirection: "row",
-                  alignItems: "center",
+            {id && id.default && id.default.address && 
+              <TouchableOpacity
+                onPress={() => {
+                  setActiveAddressOnBottomSheet({
+                    address: id.default.address,
+                    chain: [id.default.chain]
+                  })
+                  handleTokenOpenPress();
                 }}
               >
-                <Text
-                  style={{
-                    fontFamily: "KronaOne_400Regular",
-                  }}
-                >
-                  {id?.default.address.slice(0, 18) + "..."}
-                </Text>
                 <View
                   style={{
-                    height: 30,
-                    width: 30,
-                    borderRadius: 100,
-                    backgroundColor: "white",
+                    padding: 15,
+                    borderRadius: 12,
+                    justifyContent: "space-between",
+                    width: "100%",
+                    backgroundColor: "#E0FFD0",
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
                 >
-                  <Image
-                    source={{
-                      uri: id?.default.chain.chainId,
+                  <Text
+                    style={{
+                      fontFamily: "KronaOne_400Regular",
                     }}
-                  />
+                  >
+                    {id?.default.address.slice(0, 18) + "..."}
+                  </Text>
+                  <View
+                    style={{
+                      height: 30,
+                      width: 30,
+                      borderRadius: 100,
+                      backgroundColor: "white",
+                    }}
+                  >
+                    <Image
+                      source={{
+                        uri: id?.default.chain.chainId,
+                      }}
+                    />
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            }
           </View>
           <View
             style={{
@@ -229,6 +240,32 @@ export const Profile = () => {
             })}
           </View>
         </View>
+        {changed &&
+        <View style={{
+          position: 'absolute',
+          bottom: 80,
+          width: "110%",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: 'red',
+              padding: 10,
+              width: '100%',
+              borderRadius: 10,
+            }}
+          >
+            <Text style={{
+              color: 'white',
+              fontSize: 12,
+              fontFamily: "KronaOne_400Regular",
+              textAlign: 'center'
+            }}>Save</Text>
+          </TouchableOpacity>
+          </View>
+        }
         <BottomSheet
           style={{
             zIndex: 100,
@@ -264,11 +301,12 @@ export const Profile = () => {
             >
               <Text
                 style={{
-                  fontSize: 20,
+                  fontSize: 17,
                   color: "white",
+                  fontFamily: "KronaOne_400Regular",
                 }}
               >
-                {activeAdressonBottomSheet?.address.slice(0, 16) + "..."}
+                {activeAdressonBottomSheet?.address.slice(0, 14) + "..."}
               </Text>
               <TouchableOpacity
                 style={{
@@ -276,8 +314,15 @@ export const Profile = () => {
                   paddingHorizontal: 6,
                   paddingVertical: 3,
                 }}
+                onPress={() => {
+                  setChanged(true)
+                  bottomSheetRef.current?.close()
+                }}
               >
-                <Text>Remove</Text>
+                <Text style={{
+                  fontSize: 12,
+                  fontFamily: "KronaOne_400Regular",
+                }}>Remove</Text>
               </TouchableOpacity>
             </View>
             <ScrollView
@@ -286,7 +331,7 @@ export const Profile = () => {
                 position: "relative",
               }}
             >
-              <ChainAssets active={activeAdressonBottomSheet} />
+              <ChainAssets chainData={chains} active={activeAdressonBottomSheet} />
             </ScrollView>
           </View>
         </BottomSheet>

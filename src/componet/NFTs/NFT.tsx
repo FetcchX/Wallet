@@ -19,7 +19,7 @@ export const NFT = ({ image, name }: { image: string; name: string }) => {
           style={{
             width: 150,
             height: 150,
-            borderRadius: 12,
+            borderRadius: 12
           }}
           source={{
             uri: image

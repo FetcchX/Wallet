@@ -1,50 +1,58 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useEffect, useState } from "react";
 import { useChain } from "../../hooks/useChain";
 import { ChainAsset } from "./Chain";
 
 interface props {
   active: any;
+  chainData: any
 }
 
-export const ChainAssets = ({ active }: props) => {
-  const [chains, setChains] = useState<any[]>([]);
+export const ChainAssets = ({ chainData, active }: props) => {
+  console.log(chainData, "Dsdfff")
+  const [chains, setChains] = useState<any[]>(chainData);
   const { getChains } = useChain();
   const [chainAssetArray, setchainAssetArray] = useState<any>([]);
 
-  useEffect(() => {
-    (async () => {
-      const totalChains = await getChains();
-      console.log(totalChains, "Dsafds");
-      setChains(totalChains);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const totalChains = await getChains();
+  //     console.log("totalChains loaded");
+  //     setChains(totalChains);
+  //   })();
+  // }, [])
 
   const checkIfChainExist = () => {
-    chains.map((chain: any) => {
-      active?.chain.map((activeChain: any) => {
-        if (chain.id == activeChain.id) {
-          chainAssetArray.unshift({
-            name: chain.name,
-            id: chain.id,
-            active: true,
-            icon: chain.icon,
-          });
-        } else {
-          chainAssetArray.push({
-            name: chain.name,
-            id: chain.id,
-            active: false,
-            icon: chain.icon,
-          });
-        }
+    console.log("Running chain active")
+    if(active && active.chain) {
+      chains.map((chain: any) => {
+        active?.chain.map((activeChain: any) => {
+          if (chain.id == activeChain.id) {
+            chainAssetArray.unshift({
+              name: chain.name,
+              id: chain.id,
+              active: true,
+              icon: chain.icon,
+            });
+          } else {
+            chainAssetArray.push({
+              name: chain.name,
+              id: chain.id,
+              active: false,
+              icon: chain.icon,
+            });
+          }
+        });
       });
-    });
-    console.log(chainAssetArray);
+      // console.log(chainAssetArray, "dsa");
+    }
   };
 
-  useEffect(() => {
-    checkIfChainExist();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      checkIfChainExist();
+    }, [])
+  )
 
   return (
     <>
