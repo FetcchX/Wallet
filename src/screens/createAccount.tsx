@@ -20,6 +20,7 @@ import { Chain, getChains } from "fetcch-chain-data";
 import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import { useChain } from "../hooks/useChain";
+import { ethers } from "ethers";
 
 // interface Chain {
 // 	icon: string;
@@ -49,7 +50,7 @@ export const CreateAccount = ({ navigation }: any) => {
   const { seedPhrase, generateSeedPhrase, generateEvmWallet } = useWallet();
   const [genwallet, setGenwallet] = useState(false);
 
-  const { id, createId } = useId();
+  const { id, createId, generateMessage } = useId();
 
   const [isShowing, setIsShowing] = useState(false);
   const [num, setNum] = useState(-1);
@@ -80,24 +81,8 @@ export const CreateAccount = ({ navigation }: any) => {
     const otherAddresse = evmWallets[1].address;
     const defaultChain = Number(selectedChains[0].id);
     const otherChins = selectedChains.slice(1).map((x: any) => Number(x.id));
-    // create id
-    console.log(
-      JSON.stringify({
-        default: {
-          address: defaultAdress,
-          chain: defaultChain,
-        },
-        others: [
-          {
-            address: otherAddresse,
-            chain: otherChins,
-          },
-        ],
-        provider: "fetcch.testnet",
-        identifier: username,
-      })
-    );
-    const id = await createId({
+    
+    const idData = {
       default: {
         address: defaultAdress,
         chain: defaultChain,
@@ -108,8 +93,27 @@ export const CreateAccount = ({ navigation }: any) => {
           chain: otherChins,
         },
       ],
-      provider: "fetcch.testnet",
+      provider: "fetcch",
       identifier: username,
+    }
+
+    // generate message
+    const message = await generateMessage(idData)
+
+    // sign message
+    const wallet = new ethers.Wallet(evmWallets[0].privateKey)
+    console.log(message, 'dsa')
+    const currentSignature = await wallet.signMessage(message.message)
+
+    console.log({
+      ...idData,
+      currentSignature
+    }, "idData")
+
+    // create id
+    const id = await createId({
+      ...idData,
+      currentSignature
     });
     // setId(id);
     console.log("this is my id", id);

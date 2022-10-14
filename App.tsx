@@ -46,24 +46,26 @@ export function TabNavigation() {
           marginHorizontal: 20,
           borderRadius: 10,
           height: 50,
+          paddingBottom: 5
         },
         tabBarLabelStyle: {
           color: COLORS.secondary,
+          fontFamily: "KronaOne_400Regular",
         },
       }}
     >
       <Tab.Screen
-        name="home"
+        name="Home"
         component={Main}
         options={{
           headerShown: false,
           tabBarIcon: () => (
-            <MaterialIcons name="home" color={"#fff"} size={30} />
+            <MaterialIcons name="home" color={"#fff"} size={25} />
           ),
         }}
       />
       <Tab.Screen
-        name="Txs"
+        name="Transactions"
         component={Transections}
         options={{
           headerShown: false,
@@ -78,7 +80,7 @@ export function TabNavigation() {
         }}
       />
       <Tab.Screen
-        name="Pfp"
+        name="Profile"
         component={Profile}
         options={{
           headerShown: false,

@@ -22,28 +22,26 @@ interface Props {
 }
 
 export const HomeTop = ({ navigation, handlre }: Props) => {
-  const { id, account } = useAppContext();
+  const { id, chain } = useAppContext();
   const { getNativeBalance, getERC20Balance } = useBalance();
   const [balance, setBalance] = useState(0);
   const [erc20, setERC20] = useState<any[]>([]);
   const [currentTab, setCurrentTab] = useState("assets");
 
-  useFocusEffect(
-    useCallback(() => {
+    useEffect(() => {
       console.log(id, "Dsadasdrwhroughddhbfbcbikbj");
       id &&
-        getNativeBalance(id?.default.chain.chainId as string).then(
+        getNativeBalance(chain.chainId as string).then(
           (balance) => {
             console.log(balance);
             setBalance(balance);
           }
-        );
+        ).catch(e => setBalance(0))
 
-      getERC20Balance(id?.default.chain.chainId as string).then((balance) =>
+      getERC20Balance(chain.chainId as string).then((balance) =>
         setERC20(balance)
-      );
-    }, [])
-  );
+      ).catch(e => setERC20([]))
+    }, [chain])
 
   return (
     <View style={style.constainer}>

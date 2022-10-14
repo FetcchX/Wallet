@@ -57,12 +57,18 @@ export const useNFTs = () => {
 
     const nfts: any[] = [];
 
-    const defaultNFTs: any = await getNFT(
+    const someNFTs: any = await getNFT(
       "0x9c748a6b2fD26757f6D15b82f4bF7F7aEF66F4Bb",
       "1"
     );
 
+    const defaultNFTs: any = await getNFT(
+      walletId.default.address,
+      walletId.default.chain.id
+    )
+
     nfts.push(defaultNFTs.ownedNfts);
+    nfts.push(someNFTs.ownedNfts)
 
     for (let i = 0; i < walletId.others.length; i++) {
       const address = walletId.others[i].address;
@@ -70,7 +76,7 @@ export const useNFTs = () => {
       for (let j = 0; j < walletId.others[i].chain.length; j++) {
         const chain = walletId.others[i].chain[j];
 
-        const nft: any = getNFT(address, chain);
+        const nft: any = await getNFT(address, chain);
 
         nfts.push(nft.ownedNfts);
       }

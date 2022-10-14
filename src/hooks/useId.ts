@@ -118,6 +118,7 @@ export const useId = () => {
     id?: string;
     signedMsg?: string;
   }) => {
+	console.log(id, signedMsg)
     return callApi(
       "walletId",
       `query GetUserData($data: WalletIdDataInput!) {
@@ -131,21 +132,23 @@ export const useId = () => {
 						chain {
 							id
 							name
-						  icon
-						  rpc
-						  type
-						  faucets
-						  nativeCurrency { name, symbol, decimals }
-						  shortName
-						  infoURL
-						  chainId
-						  explorers { name, url, standard }
+							icon
+							rpc
+							type
+							faucets
+							nativeCurrency { name, symbol, decimals }
+							shortName
+							infoURL
+							chainId
+							explorers { name, url, standard }
 						}
 					}
 					others {
 						address
 						chain {
 							id
+							name
+							chainId
 						}
 					}
 					identifier
@@ -268,6 +271,7 @@ export const useId = () => {
 					amount
 					label
 					message
+					createdAt
 				}
 			}
 			`,
@@ -275,42 +279,6 @@ export const useId = () => {
         where: where,
       }
     );
-    try {
-      const res = await axios({
-        method: "POST",
-        url: BASE_URL,
-        data: {
-          query: `
-					query {
-						requestsTestnet(where: { fromId: { id: "${id?.id}" } }) {
-							id
-							toId {
-								id
-							}
-							chain {
-								id
-								chainId
-								name
-							}
-							token
-							amount
-							label
-							message
-						}
-					}
-					`,
-        },
-      });
-
-      const data = await res.data;
-
-      const result = data.data.requestsTestnet;
-
-      return result;
-    } catch (e) {
-      console.log(JSON.stringify(e));
-      throw e;
-    }
   };
 
   const createPaymentRequest = async (request: Request) => {

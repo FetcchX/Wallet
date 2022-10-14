@@ -9,6 +9,7 @@ import {
 } from "react";
 import { AsyncStorage } from "react-native";
 import { useId } from "./hooks/useId";
+import { getNFT, useNFTs } from "./hooks/useNFT";
 
 export interface WalletId {
   id: string;
@@ -107,6 +108,10 @@ interface AppContext {
   setAccount: Dispatch<SetStateAction<Wallet | undefined>>;
   nfts: NFT[] | undefined;
   setNFTs: Dispatch<SetStateAction<NFT[] | undefined>>;
+  chain: any;
+  setChain: Dispatch<SetStateAction<any>>;
+  chains: any[];
+  setChains: Dispatch<SetStateAction<any[]>>;
 }
 
 const AppContext = createContext<AppContext>({} as AppContext);
@@ -132,8 +137,11 @@ export const AppContextProvider = ({ children }: Props) => {
   const [seedPhrase, setSeedPhrase] = useState("");
   const [account, setAccount] = useState<Wallet>();
   const [nfts, setNFTs] = useState<NFT[]>();
+  const [chain, setChain] = useState<Chain>()
+  const [chains, setChains] = useState<Chain[]>([])
 
   const { getId } = useId();
+  const { getIdNFTs } = useNFTs()
 
   const sharedState = {
     id,
@@ -148,7 +156,34 @@ export const AppContextProvider = ({ children }: Props) => {
     setAccount,
     nfts,
     setNFTs,
+    chain,
+    setChain,
+    chains,
+    setChains
   };
+
+  useEffect(() => {
+    if(id) {
+      getIdNFTs(id.id)
+        .then(res => setNFTs(res))
+        .catch(e => console.error(e))
+    }
+  }, [id])
+
+  useEffect(() => {
+    if(id) {
+      let chains = [id.default.chain]
+
+      id.others.map(other => {
+        other.chain.map(chain => {
+          chains.push(chain)
+        })
+      })
+
+      setChain(chains[0])
+      setChains(chains)
+    }
+  }, [id])
 
   useEffect(() => {
     if (id && !account) {

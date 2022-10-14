@@ -17,9 +17,10 @@ import { useAppContext } from "../context";
 import { useId } from "../hooks/useId";
 import { useNFTs } from "../hooks/useNFT";
 import { COLORS } from "../styles/styles";
+import { Chain } from "../componet/Assets/Chain";
 
 export const Main = ({ navigation }: any) => {
-  const { evmWallets, account, setAccount, setNFTs } = useAppContext();
+  const { chain, chains, setChain, setNFTs } = useAppContext();
 
   const [num, setNum] = useState(-1);
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -80,9 +81,9 @@ export const Main = ({ navigation }: any) => {
           }}
           showsVerticalScrollIndicator={false}
         >
-          {evmWallets
-            ?.filter((w) => w.address !== account?.address)
-            .map((wallet) => (
+          {chains
+            ?.filter((w) => w.id !== chain.id)
+            .map((chain) => (
               <TouchableOpacity
                 style={{
                   width: "100%",
@@ -93,18 +94,10 @@ export const Main = ({ navigation }: any) => {
                   marginBottom: 20,
                 }}
                 onPress={() => {
-                  setAccount(wallet);
+                  setChain(chain);
                 }}
               >
-                <Text
-                  style={{
-                    marginLeft: 20,
-                    fontSize: 14,
-                    fontFamily: "KronaOne_400Regular",
-                  }}
-                >
-                  {wallet.address.substring(0, 20)}...
-                </Text>
+                <Chain image={chain.icon} name={chain.name} chainId={chain.chainId} />
               </TouchableOpacity>
             ))}
         </ScrollView>

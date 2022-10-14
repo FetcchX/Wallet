@@ -1,16 +1,17 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity, Linking } from "react-native";
 import React from "react";
 
 import { SIZES } from "../../styles/styles";
 import USDC from "../../../assets/usdc.svg";
 export interface TransetionInfo {
+  token: string
   hash: string;
   address: string;
   date: string;
   ammount: string | number;
 }
 
-export function Transection({ hash, address, ammount, date }: TransetionInfo) {
+export function Transection({ token, hash, address, ammount, date }: TransetionInfo) {
   return (
     <View
       style={{
@@ -21,122 +22,121 @@ export function Transection({ hash, address, ammount, date }: TransetionInfo) {
         backgroundColor: "#EAFDE0",
       }}
     >
-      <View
-        style={{
-          marginVertical: SIZES.small,
-          flexDirection: "row",
-          justifyContent: "space-between",
+      <TouchableOpacity
+        onPress={() => {
+          Linking.openURL(
+            `https://mumbai.polygonscan.com/tx/${hash}`
+          )
         }}
       >
         <View
           style={{
-            backgroundColor: "#515151",
-            justifyContent: "center",
-            paddingHorizontal: 12,
+            marginVertical: SIZES.small,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+              style={{
+                fontSize: SIZES.large,
+              color: "#777E90",
+              fontFamily: "KronaOne_400Regular",
+              }}
+            >
+              Token
+            </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                marginLeft: 5,
+                fontSize: SIZES.large,
+                fontFamily: "KronaOne_400Regular",
+              }}
+            >
+              {token}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            marginBottom: SIZES.small,
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
           <Text
             style={{
-              color: "white",
-              justifyContent: "center",
-              fontSize: 16,
+              fontSize: SIZES.large,
+              color: "#777E90",
               fontFamily: "KronaOne_400Regular",
             }}
           >
-            Withdraw
+            Amount
+          </Text>
+          <Text
+            style={{
+              fontFamily: "KronaOne_400Regular",
+            }}
+          >
+            {ammount.toString().slice(0, 4)}
           </Text>
         </View>
         <View
           style={{
+            marginBottom: SIZES.small,
             flexDirection: "row",
-            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <USDC height={30} />
           <Text
             style={{
-              marginLeft: 5,
               fontSize: SIZES.large,
+              color: "#777E90",
+              fontFamily: "KronaOne_400Regular",
             }}
           >
-            USDC
+            Wallet ID
+          </Text>
+          <Text
+            style={{
+              fontFamily: "KronaOne_400Regular",
+            }}
+          >
+            {address}
           </Text>
         </View>
-      </View>
-      <View
-        style={{
-          marginBottom: SIZES.small,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text
+        <View
           style={{
-            fontSize: SIZES.large,
-            color: "#777E90",
-            fontFamily: "KronaOne_400Regular",
+            marginBottom: SIZES.small,
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
-          Ammount
-        </Text>
-        <Text
-          style={{
-            fontFamily: "KronaOne_400Regular",
-          }}
-        >
-          {ammount.toString().slice(0, 4)}
-        </Text>
-      </View>
-      <View
-        style={{
-          marginBottom: SIZES.small,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: SIZES.large,
-            color: "#777E90",
-            fontFamily: "KronaOne_400Regular",
-          }}
-        >
-          walletID
-        </Text>
-        <Text
-          style={{
-            fontFamily: "KronaOne_400Regular",
-          }}
-        >
-          {address.slice(0, 10)}
-        </Text>
-      </View>
-      <View
-        style={{
-          marginBottom: SIZES.small,
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: SIZES.large,
-            color: "#777E90",
-            fontFamily: "KronaOne_400Regular",
-          }}
-        >
-          Date & time
-        </Text>
-        <Text
-          style={{
-            color: "#777E90",
-            fontFamily: "KronaOne_400Regular",
-          }}
-        >
-          {date}
-        </Text>
-      </View>
+          <Text
+            style={{
+              fontSize: SIZES.large,
+              color: "#777E90",
+              fontFamily: "KronaOne_400Regular",
+            }}
+          >
+            Date & time
+          </Text>
+          <Text
+            style={{
+              color: "#777E90",
+              fontFamily: "KronaOne_400Regular",
+            }}
+          >
+            {date}
+          </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
