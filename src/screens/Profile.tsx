@@ -1,4 +1,4 @@
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, Clipboard, Alert } from "react-native";
 import { Header } from "../componet/shared/header";
 import { Safe } from "../componet/shared/safe";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -38,6 +38,8 @@ export const Profile = () => {
       })();
     }, [])
   )
+
+  console.log(id, "DSafdfj")
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%", "80%"], []);
@@ -108,9 +110,12 @@ export const Profile = () => {
                 fontFamily: "KronaOne_400Regular",
               }}
             >
-              {id?.id.slice(0, 10) + "..."}
+              {id?.id}
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              Alert.alert("Copied to clipboard")
+              Clipboard.setString(id?.id as string)
+            }}>
               <MaterialIcons name="content-copy" color={"#000"} size={25} />
             </TouchableOpacity>
           </View>
@@ -135,7 +140,10 @@ export const Profile = () => {
                     address: id.default.address,
                     chain: [id.default.chain]
                   })
-                  handleTokenOpenPress();
+                  setTimeout(() => {
+                    console.log(activeAdressonBottomSheet, "dsa")
+                    handleTokenOpenPress();
+                  }, 5000)
                 }}
               >
                 <View
@@ -162,11 +170,18 @@ export const Profile = () => {
                       width: 30,
                       borderRadius: 100,
                       backgroundColor: "white",
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
                     }}
                   >
                     <Image
                       source={{
-                        uri: id?.default.chain.chainId,
+                        uri: id?.default.chain.icon,
+                      }}
+                      style={{
+                        width: 17,
+                        height: 30
                       }}
                     />
                   </View>
@@ -215,24 +230,29 @@ export const Profile = () => {
                         flexDirection: "row",
                       }}
                     >
-                      <View
-                        style={{
-                          marginLeft: -12,
-                          height: 30,
-                          width: 30,
-                          borderRadius: 100,
-                          backgroundColor: "white",
-                        }}
-                      ></View>
-                      <View
-                        style={{
-                          marginLeft: -4,
-                          height: 30,
-                          width: 30,
-                          borderRadius: 100,
-                          backgroundColor: "white",
-                        }}
-                      ></View>
+                      {otheradd.chain.map(chain => (
+                        <View
+                          style={{
+                            height: 30,
+                            width: 30,
+                            borderRadius: 100,
+                            backgroundColor: "white",
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Image
+                            source={{
+                              uri: chain.icon,
+                            }}
+                            style={{
+                              width: 30,
+                              height: 30
+                            }}
+                          />
+                        </View>
+                      ))}
                     </View>
                   </View>
                 </TouchableOpacity>

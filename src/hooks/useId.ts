@@ -149,6 +149,7 @@ export const useId = () => {
 							id
 							name
 							chainId
+							icon
 						}
 					}
 					identifier

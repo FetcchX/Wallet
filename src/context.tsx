@@ -48,6 +48,7 @@ export interface Chain {
   id: string;
   name: string;
   chainId: string;
+  icon: string
 }
 
 interface Wallet {

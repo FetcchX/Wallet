@@ -9,12 +9,12 @@ interface props {
 }
 
 export const ChainAssets = ({ chainData, active }: props) => {
-  console.log(chainData, "Dsdfff")
+  console.log(active, "Dsdfff")
   const [chains, setChains] = useState<any[]>(chainData);
+  const [activeChains, setActiveChains] = useState<any[]>(active)
   const { getChains } = useChain();
-  const [chainAssetArray, setchainAssetArray] = useState<any>([]);
 
-  // useEffect(() => {
+  // useEffect(() => 
   //   (async () => {
   //     const totalChains = await getChains();
   //     console.log("totalChains loaded");
@@ -25,29 +25,28 @@ export const ChainAssets = ({ chainData, active }: props) => {
   const checkIfChainExist = () => {
     console.log("Running chain active")
     if(active && active.chain) {
-      chains.map((chain: any) => {
-        active?.chain.map((activeChain: any) => {
-          if (chain.id == activeChain.id) {
-            chainAssetArray.unshift({
-              name: chain.name,
-              id: chain.id,
-              active: true,
-              icon: chain.icon,
-            });
-          } else {
-            chainAssetArray.push({
-              name: chain.name,
-              id: chain.id,
-              active: false,
-              icon: chain.icon,
-            });
-          }
-        });
-      });
+      let c = [...chainData]
+      console.log(c)
+
+      let filteredC = c.filter(c => active.chain.find((ac: any) => ac.id === c.id))
+      filteredC = filteredC.map(fc => {
+        return {
+          ...fc,
+          active: true
+        }
+      })
+
+      console.log(filteredC, "Dsafedfef")
+      c = c.filter((chain: any, idx: number) => filteredC.find(f => f.id !== chain.id));
+      
+      setChains([...filteredC, ...c])
       // console.log(chainAssetArray, "dsa");
     }
   };
 
+  // useEffect(() => {
+  //   checkIfChainExist()
+  // }, [chains])
   useFocusEffect(
     useCallback(() => {
       checkIfChainExist();
@@ -56,7 +55,7 @@ export const ChainAssets = ({ chainData, active }: props) => {
 
   return (
     <>
-      {chainAssetArray?.map((asset: any) => {
+      {chains?.map((asset: any) => {
         return (
           <ChainAsset
             key={asset.id}
