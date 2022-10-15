@@ -14,7 +14,7 @@ import { useAppContext } from "../../context";
 export const Header = ({ handleTokenOpenPress }: any) => {
   const { id } = useId();
   const { evmWallets } = useAppContext();
-  console.log(handleTokenOpenPress);
+  console.log(handleTokenOpenPress(), "Dsadsad");
   return (
     <View
       style={{
@@ -24,7 +24,9 @@ export const Header = ({ handleTokenOpenPress }: any) => {
       }}
     >
       <DOne />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => {
+              handleTokenOpenPress();
+            }}>
         <View
           style={{
             flexDirection: "row",
@@ -38,13 +40,13 @@ export const Header = ({ handleTokenOpenPress }: any) => {
               fontFamily: "KronaOne_400Regular",
             }}
           >
-            {id?.identifier}
+            {id?.id}
           </Text>
           <TouchableOpacity
+          onPress={() => {
+            handleTokenOpenPress();
+          }}
             style={headerstyles.circle}
-            onPress={() => {
-              handleTokenOpenPress();
-            }}
           />
         </View>
       </TouchableOpacity>

@@ -20,7 +20,7 @@ export const Profile = () => {
   const [changed, setChanged] = useState(false)
   const bottomSheetRef = useRef<BottomSheet>(null);
   const { getChains } = useChain();
-  const { id } = useAppContext();
+  const { id, evmWallets } = useAppContext();
   const [activeAdressonBottomSheet, setActiveAddressOnBottomSheet] =
     useState<any>();
   const [chains, setChains] = useState<any[]>([]);
@@ -39,7 +39,7 @@ export const Profile = () => {
     }, [])
   )
 
-  console.log(id, "DSafdfj")
+  console.log(evmWallets, "DSafdfj")
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%", "80%"], []);
