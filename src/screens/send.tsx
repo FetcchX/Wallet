@@ -22,6 +22,20 @@ import { Token } from "../componet/Token";
 import { Account } from "../componet/Account";
 import { useFocusEffect } from "@react-navigation/native";
 
+const getProvider = (chainId: string) => {
+  const providers: any = {
+    '1': 'https://eth-mainnet.g.alchemy.com/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx',
+    '2': 'https://polygon-mainnet.g.alchemy.com/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx',
+    '3': 'https://bsc-dataseed1.binance.org/',
+    '4': 'https://api.avax.network/ext/bc/C/rpc',
+    '5': 'https://opt-mainnet.g.alchemy.com/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx',
+    '6': 'https://arb-mainnet.g.alchemy.com/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx',
+    '7': 'https://solana-mainnet.g.alchemy.com/v2/y141okG6TC3PecBM1mL0BfST9f4WQmLx'
+  }
+
+  return providers[chainId]
+}
+
 export const Send = ({ navigation }: any) => {
   const { getAddressERC20Balance, getAddressNativeBalance } = useBalance();
   const { id } = useId();
@@ -120,21 +134,21 @@ export const Send = ({ navigation }: any) => {
     // 		: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
     // });
 
-    const paymentRequest = await createPaymentRequest({
-      payee: toId,
-      payer: id?.id as string,
-      chain: chain.id,
-      amount: ethers.utils.parseUnits(amount, token.decimals).toString(),
-      message: "Payment",
-      label: "#01",
-      token: token.address
-        ? token.address
-        : "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    });
+    // const paymentRequest = await createPaymentRequest({
+    //   payee: toId,
+    //   payer: id?.id as string,
+    //   chain: chain.id,
+    //   amount: ethers.utils.parseUnits(amount, token.decimals).toString(),
+    //   message: "Payment",
+    //   label: "#01",
+    //   token: token.address
+    //     ? token.address
+    //     : "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    // });
 
-    console.log(paymentRequest);
+    // console.log(paymentRequest);
 
-    const tx = await buildTransaction(paymentRequest.id, {
+    const tx = await buildTransaction("4", {
       fromAddress: account.address,
       fromId: id?.id as string,
       fromToken: token.address
@@ -142,14 +156,22 @@ export const Send = ({ navigation }: any) => {
         : "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       fromChain: chain.id,
     });
+    console.log(tx)
 
     let wallet = new ethers.Wallet(account.privateKey);
     wallet = wallet.connect(
       ethers.getDefaultProvider(
-        "https://polygon-mumbai.g.alchemy.com/v2/Tv9MYE2mD4zn3ziBLd6S94HvLLjTocju"
+        getProvider(chain.id)
       )
     );
-    const sentTx = await wallet.sendTransaction(tx.transactionData);
+    const sentTx = await wallet.sendTransaction({
+      data: tx.transactionData.data,
+      value: tx.transactionData.value,
+      chainId: tx.transactionData.chain,
+      to: tx.transactionData.to,
+      from: tx.transactionData.from,
+    });
+    console.log(sentTx)
     await sentTx.wait();
     navigation.navigate("success", {
       chainId: 7,

@@ -81,10 +81,10 @@ export interface Request {
   label: string;
 }
 
-// const BASE_URL = `http://${manifest?.debuggerHost
-// 	?.split(":")
-// 	.shift()}:5000/graphql/`;
-const BASE_URL = "https://testnet-api.fetcch.xyz/graphql";
+const BASE_URL = `http://${manifest?.debuggerHost
+	?.split(":")
+	.shift()}:5000/graphql/`;
+// const BASE_URL = "https://testnet-api.fetcch.xyz/graphql";
 
 export const useId = () => {
   const { id, setId } = useAppContext();

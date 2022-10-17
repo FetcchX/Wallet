@@ -14,7 +14,7 @@ import { useAppContext } from "../../context";
 export const Header = ({ handleTokenOpenPress }: any) => {
   const { id } = useId();
   const { evmWallets } = useAppContext();
-  console.log(handleTokenOpenPress(), "Dsadsad");
+  console.log(handleTokenOpenPress, "Dsadsad");
   return (
     <View
       style={{
